@@ -65,7 +65,7 @@ Adding another site (if so desired) would take the following steps:
 1.	Make new directory ./public/new-subdomain.bfi.local
 2.	Add files to:
 
-		./public/[new subdomain].bfi.local/www
+		./public/new-subdomain.bfi.local/www
 
 3.	Add new-subdomain.bfi.local to the 33.33.33.10 line in the /etc/hosts file.
 4.	Add new-subdomain.bfi.local to the :localhost_aliases array in the Vagrant file.
