@@ -13,7 +13,7 @@ Vagrant::Config.run do |config|
   # end
 
   # Memory setting for Vagrant >= 0.90
-  config.vm.customize ["modifyvm", :id, "--memory", "1024"]
+  config.vm.customize ["modifyvm", :id, "--memory", "2048"]
 
   # Network setting for Vagrant < 0.90
   # config.vm.network("33.33.33.10")
