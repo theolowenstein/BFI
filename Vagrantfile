@@ -23,7 +23,7 @@ Vagrant::Config.run do |config|
 
   config.vm.share_folder("public", "/vagrant/public", "./public", :owner => "www-data", :group => "www-data")
   # config.vm.share_folder("v-root", "/vagrant", ".")
-  # config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
   # config.vm.share_folder("v-apt", "/var/cache/apt", "~/temp/vagrant_aptcache/apt", :nfs => true)
 
   config.vm.provision :chef_solo do |chef|
