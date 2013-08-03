@@ -42,7 +42,7 @@ Vagrant::Config.run do |config|
           :server_root_password => "root" # TODO Hardcoded MySQL root password.
         },
         :hosts => {
-          :localhost_aliases => ["dev.bfi.local", "foo.bfi.local"]
+          :localhost_aliases => ["dev.bfi.local", "challenge.dev.bfi.local", "ideaindex.dev.bfi.local"]
         }
       })
   end
