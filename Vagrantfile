@@ -19,7 +19,7 @@ Vagrant::Config.run do |config|
   # config.vm.network("33.33.33.10")
 
   # Network setting for Vagrant >= 0.90
-  config.vm.network :hostonly, "33.33.33.10"
+  config.vm.network :hostonly, "192.168.33.10"
 
   config.vm.share_folder("public", "/vagrant/public", "./public", :owner => "www-data", :group => "www-data")
   # config.vm.share_folder("v-root", "/vagrant", ".")
@@ -46,4 +46,5 @@ Vagrant::Config.run do |config|
         }
       })
   end
+
 end

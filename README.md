@@ -28,7 +28,7 @@ So. In order to get started with developing for BFI, you'll need to do the follo
 
 7.	You'll need to add those URLs your /etc/hosts file for everything to work smoothly:
 	
-		33.33.33.10 dev.bfi.local foo.bfi.local etc.
+		192.168.33.10 dev.bfi.local foo.bfi.local etc.
 
 8.	Once Vagrant is up and you're back to the command prompt again, you're set to go! If at any point you'd like to add subdomains, make sure to enter them in the above two spots.
 9.	Once you're done working and want to shut down Vagrant, type into Terminal:
@@ -57,24 +57,23 @@ phpMyAdmin
 
 phpMyAdmin can be accessed via http://dev.bfi.local/phpmyadmin, with username: myadmin and password: myadmin.
 
-Adding another site
+Adding another subdomain
 ===================
 
-Adding another site (if so desired) would take the following steps:
+Adding another subdomain (if so desired) would take the following steps:
 
-1.	Make new directory ./public/new-subdomain.bfi.local
-2.	Add files to:
-
-		./public/new-subdomain.bfi.local/www
-
-3.	Add new-subdomain.bfi.local to the 33.33.33.10 line in the /etc/hosts file.
-4.	Add new-subdomain.bfi.local to the :localhost_aliases array in the Vagrant file.
-5.	Restart the virtual machine:
+1.	Add new-subdomain.dev.bfi.local to the 192.168.33.10 line in local machine's /etc/hosts file.
+2.	Add new-subdomain.dev.bfi.local to the :localhost_aliases array in the Vagrantfile.
+3.	Restart the virtual machine:
 
 		$ vagrant halt
 		$ vagrant up
 
-6. Go to http://new-subdomain.bfi.local and work away!
+4. Go to http://new-subdomain.dev.bfi.local and work away!
+5. FYI: Subdomains in :localhost_aliases array are automatically hardset to dev.bfi.local codebase in
+
+		./cookbooks/drupal-cookbooks/drupal/recipes/drupal_apps.rb
+
 
 Reference
 =========

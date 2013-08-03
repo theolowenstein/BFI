@@ -10,7 +10,8 @@ if node[:hosts].has_key(:localhost_aliases)
       template "sites.conf.erb"
       server_name site
       server_aliases [site]
-      docroot "#{node[:www_root]}/#{site}/www"
+#      docroot "#{node[:www_root]}/#{site}/www"
+	  docroot "#{node[:www_root]}/dev.bfi.local/www"
     end
   end
 end
