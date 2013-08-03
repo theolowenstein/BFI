@@ -21,7 +21,7 @@ So. In order to get started with developing for BFI, you'll need to do the follo
 	
 		$ vagrant up
 
-5.	And Vagrant should boot up, within 2-5 minutes.
+5.	Vagrant will work for a minute and prompt you for your local machine's admin password, to set up NFS file sharing on the virtual serve. Enter it, and Vagrant should continue booting up.
 6.	In the meantime, open up Vagrantfile and check the URLs listed within:
 
 		:localhost_aliases => ["dev.bfi.local", "foo.bfi.local", etc.]
@@ -52,11 +52,6 @@ Files for the project are in:
 
 which is akin to the public_html folder in a standard shared hosting environment.
 
-phpMyAdmin
-==========
-
-phpMyAdmin can be accessed via http://dev.bfi.local/phpmyadmin, with username: myadmin and password: myadmin.
-
 Adding another subdomain
 ===================
 
@@ -74,6 +69,18 @@ Adding another subdomain (if so desired) would take the following steps:
 
 		./cookbooks/drupal-cookbooks/drupal/recipes/drupal_apps.rb
 
+phpMyAdmin
+==========
+
+phpMyAdmin can be accessed via http://dev.bfi.local/phpmyadmin, with username: myadmin and password: myadmin.
+
+mySQL
+=====
+
+Server settings set:
+
+	memory_limit: 2048M
+	thread_stack: 192K
 
 Reference
 =========
