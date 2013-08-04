@@ -4,7 +4,13 @@ Vagrant::Config.run do |config|
   # online.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "base"
+  config.vm.box = "quantal"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+
+  # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
 
   # Memory setting for Vagrant < 0.90
@@ -16,7 +22,7 @@ Vagrant::Config.run do |config|
   config.vm.customize ["modifyvm", :id, "--memory", "2048"]
 
   # Network setting for Vagrant < 0.90
-  # config.vm.network("33.33.33.10")
+  # config.vm.network("192.168.33.10")
 
   # Network setting for Vagrant >= 0.90
   config.vm.network :hostonly, "192.168.33.10"
@@ -33,7 +39,7 @@ Vagrant::Config.run do |config|
 
     # This role represents our default Drupal development stack.
     chef.add_role("drupal_lamp_varnish_dev")
-    # Install an example D7 install at dev.bfi.local.
+    # Install an example D7 install at drupal.vbox.local.
     # chef.add_recipe('drupal::example')
     # This is basically the Vagrant role.
     chef.json.merge!({
@@ -46,5 +52,4 @@ Vagrant::Config.run do |config|
         }
       })
   end
-
 end

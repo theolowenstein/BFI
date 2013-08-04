@@ -19,10 +19,10 @@
 # limitations under the License.
 #
 
-case node['platform_family']
-when "rhel", "fedora"
+case node['platform']
+when "centos", "redhat", "fedora"
   # centos php compiled with curl
-when "debian"
+when "debian", "ubuntu"
   package "php5-curl" do
     action :upgrade
   end
