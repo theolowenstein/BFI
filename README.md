@@ -7,41 +7,53 @@ This is the GitHub directory for the dev version of BFI's website presence, kick
 
 This is a general overview of how to make your way around the project.
 
-Vagrant
-=======
+Installation/First Run
+======================
 
 This project is packaged up in a Vagrant box, making it easy to share the same dev environment between differnt platforms. More information on Vagrant can be found at http://www.vagrantup.com/. Vagrant leverages VirtualBox to make a "headless" virtual server, in which to serve up the site.
 
-So. In order to get started with developing for BFI, you'll need to do the following:
+IMPORTANT: There are a number of steps you need to take before you can run this virtual server (and develop the BFI site) successfully. Please make sure to follow all the instructions below:
 
 1.	Download and Install Vagrant (http://downloads.vagrantup.com/)
 2.	Download and Install VirtualBox (https://www.virtualbox.org/wiki/Downloads)
-3.	Clone this project (if you already haven't)
-4.	In terminal, cd into the project directory and enter:
+3.	Clone this project (if you haven't already)
+4.	Before you launch the Vagrant file for the first time, make sure to copy the ./public/dev.bfi.local directory to a safe place and remove the original files. This is crucial for the way in which the Vagrant file sets up the databases and phpMyAdmin later on.
+5.	In terminal, cd into the project directory and enter:
 	
 		$ vagrant up
 
-5.	Vagrant will work for a minute and prompt you for your local machine's admin password, to set up NFS file sharing on the virtual serve. Enter it, and Vagrant should continue booting up.
-6.	In the meantime, open up Vagrantfile and check the URLs listed within:
+6.	Vagrant will work for a minute and prompt you for your local machine's admin password, to set up NFS file sharing on the virtual serve. Enter it, and Vagrant should continue booting up.
+7.	In the meantime, open up Vagrantfile and check the URLs listed within:
 
-		:localhost_aliases => ["dev.bfi.local", "foo.bfi.local", etc.]
+		:localhost_aliases => ["dev.bfi.local", "challenge.dev.bfi.local", "ideaindex.dev.bfi.local"]
 
-7.	You'll need to add those URLs your /etc/hosts file for everything to work smoothly:
+8.	You'll need to add those URLs the /etc/hosts file on your local machine for everything to work smoothly:
 	
-		192.168.33.10 dev.bfi.local foo.bfi.local etc.
+		192.168.33.10 dev.bfi.local challenge.dev.bfi.local ideaindex.dev.bfi.local
 
-8.	Once Vagrant is up and you're back to the command prompt again, you're set to go! If at any point you'd like to add subdomains, make sure to enter them in the above two spots.
-9.	Once you're done working and want to shut down Vagrant, type into Terminal:
+9.	After Vagrant boots up the virtual machine for the first time and you have the command prompt again, make sure to comment out the following line in the Vagrantfile:
+
+		# chef.add_recipe('drupal::example')
+
+10.	If you've removed the ./public/dev.bfi.local directy as detailed above, go to
+./public/dev.bfi.local and clear the directory (yes, including all the Drupal files) and copy over all the files from the original public/dev.bfi.local directory you saved before.
+10. Once you're done with that, navigate to dev.bfi.local/phpmyadmin and log in with myadmin, myadmin. Drop all tables from the bfi_drupal database and import the desired backup-and-migrate tarball from ./public/dev.bfi.local/private/backup_migrate
+11. Once the database is imported, you should be able to work from dev.bfi.local.
+12.	If at any point you'd like to add subdomains, make sure to enter them in the two locations mentioned in steps 7 and 8 and do the requisite configuring within the site.
+13.	Once you're done working and want to shut down Vagrant, type into Terminal:
 
 		$ vagrant halt
 
-10.	NEVER type vagrant destroy unless you absolutely know what you're doing.
-11.	You can SSH into vagrant via:
+14.	To restart Vagrant, type:
+
+		$ vagrant reload
+
+15.	You can SSH into vagrant via:
 
 		$ vagrant ssh
 
-12.	Once you're done, always make sure to commit, sync, and submit a Pull Request on GitHub.
-13.	Enjoy!
+16.	Once you're done, always make sure to commit, sync, and submit a Pull Request on GitHub.
+17.	Enjoy!
 
 Files
 =====
@@ -61,11 +73,9 @@ Adding another subdomain (if so desired) would take the following steps:
 2.	Add new-subdomain.dev.bfi.local to the :localhost_aliases array in the Vagrantfile.
 3.	Restart the virtual machine:
 
-		$ vagrant halt
-		$ vagrant up
+		$ vagrant reload
 
-4. Go to http://new-subdomain.dev.bfi.local and work away!
-5. FYI: Subdomains in :localhost_aliases array are automatically hardset to dev.bfi.local codebase in
+FYI: Subdomains in :localhost_aliases array are automatically hardset to alias to dev.bfi.local codebase in
 
 		./cookbooks/drupal-cookbooks/drupal/recipes/drupal_apps.rb
 
@@ -79,12 +89,20 @@ mySQL
 
 Server settings set:
 
-	memory_limit: 2048M
 	thread_stack: 192K
+	memory_limit: 256K
 
 Reference
 =========
 
+Virtual Machine memory set at: 2048M
+
 This Vagrant environment utilizes the setup in the Drupal Vagrant project at https://drupal.org/project/vagrant, and there is some added documentation on set-up and use at http://webwash.net/tutorials/getting-started-drupal-vagrant.
+
+If you'd like to try this project out on another box, try replacing the following line in the Vagrantfile:
+
+  config.vm.box_url = "http://dl.dropbox.com/u/1537815/precise64.box"
+
+ with a box of your choosing from http://www.vagrantbox.es/.
 
 Jambo!

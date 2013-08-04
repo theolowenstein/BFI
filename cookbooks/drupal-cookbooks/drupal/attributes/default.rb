@@ -37,7 +37,7 @@ default[:php5][:output_buffering]                           = "Off"
 default[:php5][:serialize_precision]                        = "100"
 
 #; Maximum amount of memory a script may consume (16MB)
-default[:php5][:resource_limits][:memory_limit]             = "196M"
+default[:php5][:resource_limits][:memory_limit]             = "256M"
 
 #; Maximum execution time of each script, in seconds
 default[:php5][:resource_limits][:max_execution_time]       = "30"
