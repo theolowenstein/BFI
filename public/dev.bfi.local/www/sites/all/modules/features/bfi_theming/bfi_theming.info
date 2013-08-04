@@ -1,0 +1,9 @@
+name = BFI Theming
+description = Theming configuration for BFI sites
+core = 7.x
+package = Features
+version = 7.x-0.1
+project = bfi_theming
+dependencies[] = bfi_domains
+dependencies[] = bfi_site_basics
+features[features_api][] = api:2

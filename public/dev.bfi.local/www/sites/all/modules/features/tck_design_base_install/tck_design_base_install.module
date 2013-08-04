@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the TCK Design Base Install feature.
+ */
+
+include_once 'tck_design_base_install.features.inc';

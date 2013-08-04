@@ -30,6 +30,7 @@ default_attributes(
   },
   :php5 => {
     :max_execution_time => "60",
-    :memory_limit => "256M"
+    :memory_limit => "256M",
+    :upload_max_filesize => "20M"
   }
 )
