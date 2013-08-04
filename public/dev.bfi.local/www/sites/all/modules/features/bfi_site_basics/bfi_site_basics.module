@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the BFI Site Basics feature.
+ */
+
+include_once 'bfi_site_basics.features.inc';
