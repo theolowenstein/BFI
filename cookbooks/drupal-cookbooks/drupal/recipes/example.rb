@@ -25,15 +25,15 @@ end
 # drush make a default drupal site example
 bash "install-default-drupal-makefile" do
   code <<-EOH
-(mkdir -p /vagrant/public/drupal.vbox.local)
+(mkdir -p /vagrant/public/dev.bfi.local)
   EOH
-  not_if { File.exists?("/vagrant/public/drupal.vbox.local/example.make") }
+  not_if { File.exists?("/vagrant/public/dev.bfi.local/example.make") }
 end
 
 # Copy make file to site.
 # TODO Fetch this file online?
 # TODO Does this overwrite?
-cookbook_file "/vagrant/public/drupal.vbox.local/example.make" do
+cookbook_file "/vagrant/public/dev.bfi.local/example.make" do
   source "example.make"
   notifies :restart, resources("service[apache2]"), :delayed
 end
@@ -41,12 +41,13 @@ end
 # drush make a default drupal site example
 bash "install-default-drupal-site" do
   code <<-EOH
-(cd /vagrant/public/drupal.vbox.local; drush make example.make www)
+(cd /vagrant/public/dev.bfi.local; drush make example.make www)
   EOH
-  not_if { File.exists?("/vagrant/public/drupal.vbox.local/www/index.php") }
+  not_if { File.exists?("/vagrant/public/dev.bfi.local/www/index.php") }
 end
 
-cookbook_file "/vagrant/public/drupal.vbox.local/www/sites/default/settings.php" do
+cookbook_file "/vagrant/public/dev.bfi.local/www/sites/default/settings.php" do
   source "settings.php"
   notifies :restart, resources("service[varnish]"), :delayed
 end
+

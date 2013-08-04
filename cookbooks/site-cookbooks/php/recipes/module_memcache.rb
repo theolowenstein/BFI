@@ -19,8 +19,8 @@
 # limitations under the License.
 #
 
-case node['platform_family']
-when "rhel", "fedora"
+case node['platform']
+when "centos", "redhat", "fedora"
   %w{ zlib-devel }.each do |pkg|
     package pkg do
       action :install
@@ -30,7 +30,7 @@ when "rhel", "fedora"
     action :install
     #directives(:shm_size => "128M", :enable_cli => 0)
   end
-when "debian"
+when "debian", "ubuntu"
   package "php5-memcache" do
     action :install
   end

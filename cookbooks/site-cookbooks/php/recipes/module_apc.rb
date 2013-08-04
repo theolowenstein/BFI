@@ -19,18 +19,18 @@
 # limitations under the License.
 #
 
-case node['platform_family']
-when "rhel", "fedora"
+case node['platform']
+when "centos", "redhat", "fedora"
   %w{ httpd-devel pcre pcre-devel }.each do |pkg|
     package pkg do
       action :install
     end
   end
-  php_pear "APC" do
+  php_pear "apc" do
     action :install
     directives(:shm_size => "128M", :enable_cli => 0)
   end
-when "debian"
+when "debian", "ubuntu"
   package "php-apc" do
     action :install
   end

@@ -22,28 +22,24 @@ require 'chef/mixin/shell_out'
 require 'chef/mixin/language'
 include Chef::Mixin::ShellOut
 
-# the logic in all action methods mirror that of
+# the logic in all action methods mirror that of 
 # the Chef::Provider::Package which will make
 # refactoring into core chef easy
-
-def whyrun_supported?
-  true
-end
 
 action :install do
   # If we specified a version, and it's not the current version, move to the specified version
   if @new_resource.version != nil && @new_resource.version != @current_resource.version
     install_version = @new_resource.version
+  # If it's not installed at all, install it
+  elsif @current_resource.version == nil
+    install_version = candidate_version
   end
 
-  # If it's not installed at all or an upgrade, install it
-  if install_version || @current_resource.version == nil
-    description = "install package #{@new_resource} #{install_version}"
-    converge_by(description) do
-       info_output = "Installing #{@new_resource}"
-       info_output << " version #{install_version}" if install_version and !install_version.empty?
-       Chef::Log.info(info_output)
-       status = install_package(@new_resource.package_name, install_version)
+  if install_version
+    Chef::Log.info("Installing #{@new_resource} version #{install_version}")
+    status = install_package(@new_resource.package_name, install_version)
+    if status
+      @new_resource.updated_by_last_action(true)
     end
   end
 end
@@ -51,32 +47,28 @@ end
 action :upgrade do
   if @current_resource.version != candidate_version
     orig_version = @current_resource.version || "uninstalled"
-    description = "upgrade package #{@new_resource} version from #{orig_version} to #{candidate_version}"
-    converge_by(description) do
-       Chef::Log.info("Upgrading #{@new_resource} version from #{orig_version} to #{candidate_version}")
-       status = upgrade_package(@new_resource.package_name, candidate_version)
+    Chef::Log.info("Upgrading #{@new_resource} version from #{orig_version} to #{candidate_version}")
+    status = upgrade_package(@new_resource.package_name, candidate_version)
+    if status
+      @new_resource.updated_by_last_action(true)
     end
   end
 end
 
 action :remove do
   if removing_package?
-    description = "remove package #{@new_resource}"
-    converge_by(description) do
-       Chef::Log.info("Removing #{@new_resource}")
-       remove_package(@current_resource.package_name, @new_resource.version)
-    end
+    Chef::Log.info("Removing #{@new_resource}")
+    remove_package(@current_resource.package_name, @new_resource.version)
+    @new_resource.updated_by_last_action(true)
   else
   end
 end
 
 action :purge do
   if removing_package?
-    description = "purge package #{@new_resource}"
-    converge_by(description) do
-       Chef::Log.info("Purging #{@new_resource}")
-       purge_package(@current_resource.package_name, @new_resource.version)
-    end
+    Chef::Log.info("Purging #{@new_resource}")
+    purge_package(@current_resource.package_name, @new_resource.version)
+    @new_resource.updated_by_last_action(true)
   end
 end
 
@@ -96,8 +88,8 @@ def expand_options(options)
   options ? " #{options}" : ""
 end
 
-# these methods are the required overrides of
-# a provider that extends from Chef::Provider::Package
+# these methods are the required overrides of 
+# a provider that extends from Chef::Provider::Package 
 # so refactoring into core Chef should be easy
 
 def load_current_resource
@@ -109,7 +101,7 @@ def load_current_resource
     @bin = 'pecl'
   end
   Chef::Log.debug("#{@current_resource}: Installed version: #{current_installed_version} Candidate version: #{candidate_version}")
-
+  
   unless current_installed_version.nil?
     @current_resource.version(current_installed_version)
     Chef::Log.debug("Current version is #{@current_resource.version}") if @current_resource.version
@@ -143,15 +135,13 @@ def candidate_version
 end
 
 def install_package(name, version)
-  command = "echo \"\r\" | #{@bin} -d preferred_state=#{can_haz(@new_resource, "preferred_state")} install -a#{expand_options(@new_resource.options)} #{prefix_channel(can_haz(@new_resource, "channel"))}#{name}"
-  command << "-#{version}" if version and !version.empty?
-  pear_shell_out(command)
-  manage_pecl_ini(name, :create, can_haz(@new_resource, "directives"), can_haz(@new_resource, "zend_extensions")) if pecl?
+  pear_shell_out("echo -e \"\\r\" | #{@bin} -d preferred_state=#{can_haz(@new_resource, "preferred_state")} install -a#{expand_options(@new_resource.options)} #{prefix_channel(can_haz(@new_resource, "channel"))}#{name}-#{version}")
+  manage_pecl_ini(name, :create, can_haz(@new_resource, "directives")) if pecl?
 end
 
 def upgrade_package(name, version)
-  pear_shell_out("echo \"\r\" | #{@bin} -d preferred_state=#{can_haz(@new_resource, "preferred_state")} upgrade -a#{expand_options(@new_resource.options)} #{prefix_channel(can_haz(@new_resource, "channel"))}#{name}-#{version}")
-  manage_pecl_ini(name, :create, can_haz(@new_resource, "directives"), can_haz(@new_resource, "zend_extensions")) if pecl?
+  pear_shell_out("echo -e \"\\r\" | #{@bin} -d preferred_state=#{can_haz(@new_resource, "preferred_state")} upgrade -a#{expand_options(@new_resource.options)} #{prefix_channel(can_haz(@new_resource, "channel"))}#{name}-#{version}")
+  manage_pecl_ini(name, :create, can_haz(@new_resource, "directives")) if pecl?
 end
 
 def remove_package(name, version)
@@ -182,46 +172,14 @@ def prefix_channel(channel)
   channel ? "#{channel}/" : ""
 end
 
-def get_extension_dir()
-  @extension_dir ||= begin
-    p = shell_out("php-config --extension-dir")
-    p.stdout.strip
-  end
-end
-
-def get_extension_files(name)
-  files = []
-
-  p = shell_out("#{@bin} list-files #{name}")
-  p.stdout.each_line.grep(/^src\s+.*\.so$/i).each do |line|
-    files << line.split[1]
-  end
-
-  files
-end
-
-def manage_pecl_ini(name, action, directives, zend_extensions)
-  ext_prefix = get_extension_dir()
-  ext_prefix << ::File::SEPARATOR if ext_prefix[-1].chr != ::File::SEPARATOR
-
-  files = get_extension_files(name)
-
-  extensions = Hash[ files.map { |filepath|
-    rel_file = filepath.clone
-    rel_file.slice! ext_prefix if rel_file.start_with? ext_prefix
-
-    zend = zend_extensions.include?(rel_file)
-
-    [ (zend ? filepath : rel_file) , zend ]
-  }]
-
+def manage_pecl_ini(name, action, directives)
   template "#{node['php']['ext_conf_dir']}/#{name}.ini" do
     source "extension.ini.erb"
     cookbook "php"
     owner "root"
     group "root"
     mode "0644"
-    variables(:name => name, :extensions => extensions, :directives => directives)
+    variables(:name => name, :directives => directives)
     action action
   end
 end
@@ -250,15 +208,15 @@ def pecl?
   @pecl ||= begin
     # search as a pear first since most 3rd party channels will report pears as pecls!
     search_cmd = "pear -d preferred_state=#{can_haz(@new_resource, "preferred_state")} search#{expand_channel(can_haz(@new_resource, "channel"))} #{@new_resource.package_name}"
-    if shell_out(search_cmd).stdout.split("\n").find { |line| line =~ /^#{@new_resource.package_name}\s+#{haz_ver(@new_resource, "version")}/ }
+    if shell_out(search_cmd).stdout =~ /\.?Matched packages/i
       false
     else
       # fall back and search as a pecl
       search_cmd = "pecl -d preferred_state=#{can_haz(@new_resource, "preferred_state")} search#{expand_channel(can_haz(@new_resource, "channel"))} #{@new_resource.package_name}"
-      if shell_out(search_cmd).stdout.split("\n").find { |line| line =~ /^#{@new_resource.package_name}\s+#{haz_ver(@new_resource, "version")}/ }
+      if shell_out(search_cmd).stdout =~ /\.?Matched packages/i
         true
       else
-        raise "Package #{@new_resource.package_name} not found in either PEAR or PECL."
+        false
       end
     end
   end
@@ -268,8 +226,4 @@ end
 # this allows PhpPear to work with Chef::Resource::Package
 def can_haz(resource, attribute_name)
   resource.respond_to?(attribute_name) ? resource.send(attribute_name) : nil
-end
-
-def haz_ver(resource, version)
-  resource.respond_to?(version) ? resource.send(version) : '\d+\.\d+\.\d+'
 end
