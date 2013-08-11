@@ -132,8 +132,8 @@ define('CIVICRM_LOGGING_DSN', CIVICRM_DSN);
 
 global $civicrm_root;
 
-$civicrm_root = 'vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm';
-define( 'CIVICRM_TEMPLATE_COMPILEDIR', 'vagrant/public/dev.bfi.local/www/sites/default/files/civicrm/templates_c/' );
+$civicrm_root = '/vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm';
+define( 'CIVICRM_TEMPLATE_COMPILEDIR', '/vagrant/public/dev.bfi.local/www/sites/default/files/civicrm/templates_c/' );
 
 /**
  * Site URLs:
@@ -168,7 +168,7 @@ define( 'CIVICRM_UF_BASEURL'      , 'http://dev.bfi.local/' );
  * We recommend using a 16-32 bit alphanumeric/punctuation key.
  * More info at http://wiki.civicrm.org/confluence/display/CRMDOC/Command-line+Script+Configuration
  */
-define( 'CIVICRM_SITE_KEY', 'd73cd07ea2b408e78964a0b9ce1effb6' );
+define( 'CIVICRM_SITE_KEY', '8b6cf5cc0a8792afab922ed60d1435d7' );
 
 /*
  * If you want to disable IDS, set this to 0.
@@ -188,7 +188,7 @@ define( 'CIVICRM_MAIL_SMARTY', 0 );
  * The CIVICRM_MAIL_LOG is a debug option which disables MTA (mail transport agent) interaction.
  * You must disable CIVICRM_MAIL_LOG before CiviCRM will talk to your MTA.
  */
-// define( 'CIVICRM_MAIL_LOG', '/Users/tkida/Sites/bfi-temp/sites/default/files/civicrm/templates_c//mail.log' );
+// define( 'CIVICRM_MAIL_LOG', '/vagrant/public/dev.bfi.local/www/sites/default/files/civicrm/templates_c//mail.log' );
 
 define( 'CIVICRM_DOMAIN_ID'      , 1 );
 
