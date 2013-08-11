@@ -575,4 +575,4 @@ include DRUPAL_ROOT . '/sites/all/modules/domain/settings.inc';
 /**
 * Increase memory allotted to Drupal
 */
-ini_set('memory_limit', '256M');
+# ini_set('memory_limit', '256M');
