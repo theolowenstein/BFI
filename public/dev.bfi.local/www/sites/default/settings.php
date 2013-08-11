@@ -335,7 +335,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * between your various domains. Make sure to always start the $cookie_domain
  * with a leading dot, as per RFC 2109.
  */
-$cookie_domain = '.dev.bfi.local';
+$cookie_domain = '.dev.bfi.org';
 
 /**
  * Variable overrides:
@@ -574,4 +574,4 @@ include DRUPAL_ROOT . '/sites/all/modules/domain/settings.inc';
 /**
 * Increase memory allotted to Drupal
 */
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '512M');

@@ -59,6 +59,9 @@ define( 'CIVICRM_UF'               , 'Drupal'        );
  * Datasource (DSN) format:
  *      define( 'CIVICRM_UF_DSN', 'mysql://cms_db_username:cms_db_password@db_server/cms_database?new_link=true');
  */
+
+# OVERRIDING FOR DEV/TESTING ENV
+# define( 'CIVICRM_UF_DSN'           , 'mysql://myadmin:Bucky!81@localhost/bfi_drupal?new_link=true' );
 define( 'CIVICRM_UF_DSN'           , 'mysql://myadmin:myadmin@localhost/bfi_drupal?new_link=true' );
 
 /**
@@ -80,6 +83,9 @@ define( 'CIVICRM_UF_DSN'           , 'mysql://myadmin:myadmin@localhost/bfi_drup
  *      define( 'CIVICRM_DSN'         , 'mysql://civicrm:YOUR_PASSWORD@localhost/civicrm?new_link=true' );
  *
  */
+
+# OVERRIDING FOR DEV/TESTING ENV
+# define( 'CIVICRM_DSN'          , 'mysql://myadmin:Bucky!81@localhost/bfi_civicrm?new_link=true' );
 define( 'CIVICRM_DSN'          , 'mysql://myadmin:myadmin@localhost/bfi_civicrm?new_link=true' );
 
 /**
@@ -132,6 +138,10 @@ define('CIVICRM_LOGGING_DSN', CIVICRM_DSN);
 
 global $civicrm_root;
 
+# OVERRIDING FOR DEV/TESTING ENV
+# $civicrm_root = '/home/members/tckdesign/sites/bfi.tckdesign.org/web/sites/all/modules/civicrm';
+# define( 'CIVICRM_TEMPLATE_COMPILEDIR', '/home/members/tckdesign/sites/bfi.tckdesign.org/web/sites/default/files/civicrm/templates_c/' );
+
 $civicrm_root = 'vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm';
 define( 'CIVICRM_TEMPLATE_COMPILEDIR', 'vagrant/public/dev.bfi.local/www/sites/default/files/civicrm/templates_c/' );
 
@@ -160,6 +170,9 @@ define( 'CIVICRM_TEMPLATE_COMPILEDIR', 'vagrant/public/dev.bfi.local/www/sites/d
  *      define( 'CIVICRM_UF_BASEURL' , 'http://www.example.com/joomla/' );
  *
  */
+
+# OVERRIDING FOR DEV/TESTING ENV
+# define( 'CIVICRM_UF_BASEURL'      , 'http://bfi.tckdesign.org/' );
 define( 'CIVICRM_UF_BASEURL'      , 'http://dev.bfi.local/' );
 
 /*
@@ -168,6 +181,9 @@ define( 'CIVICRM_UF_BASEURL'      , 'http://dev.bfi.local/' );
  * We recommend using a 16-32 bit alphanumeric/punctuation key.
  * More info at http://wiki.civicrm.org/confluence/display/CRMDOC/Command-line+Script+Configuration
  */
+
+# OVERRIDING FOR DEV/TESTING ENV
+# define( 'CIVICRM_SITE_KEY', '49130a282d2721d1220bb6137b957ff7' );
 define( 'CIVICRM_SITE_KEY', 'd73cd07ea2b408e78964a0b9ce1effb6' );
 
 /*
@@ -188,7 +204,7 @@ define( 'CIVICRM_MAIL_SMARTY', 0 );
  * The CIVICRM_MAIL_LOG is a debug option which disables MTA (mail transport agent) interaction.
  * You must disable CIVICRM_MAIL_LOG before CiviCRM will talk to your MTA.
  */
-// define( 'CIVICRM_MAIL_LOG', '/Users/tkida/Sites/bfi-temp/sites/default/files/civicrm/templates_c//mail.log' );
+// define( 'CIVICRM_MAIL_LOG', 'vagrant/public/dev.bfi.local/www/sites/default/files/civicrm/templates_c//mail.log' );
 
 define( 'CIVICRM_DOMAIN_ID'      , 1 );
 
@@ -263,6 +279,7 @@ define( 'CIVICRM_MEMCACHE_PREFIX', '' );
  * to FALSE; for SVN checkouts, it defaults to TRUE.
  */
 // define( 'CIVICRM_MYSQL_STRICT', TRUE );
+
 
 /**
  *
