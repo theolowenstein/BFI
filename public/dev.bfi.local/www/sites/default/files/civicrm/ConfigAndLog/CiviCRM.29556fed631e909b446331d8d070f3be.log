@@ -1,0 +1,24 @@
+Aug 11 21:11:47  [info] $Fatal Error Details = Array
+(
+    [message] => The <a href="/civicrm/admin/sms/provider?reset=1">SMS Provider</a> has not been configured or is not active.
+    [code] => 
+)
+
+
+Aug 11 21:11:47  [info] $backTrace = #0 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Error.php(315): CRM_Core_Error::backtrace("backTrace", TRUE)
+#1 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/SMS/Form/Group.php(50): CRM_Core_Error::fatal("The <a href=\"/civicrm/admin/sms/provider?reset=1\">SMS Provider</a> has not ...")
+#2 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Form.php(336): CRM_SMS_Form_Group->preProcess()
+#3 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/QuickForm/Action/Display.php(93): CRM_Core_Form->buildForm()
+#4 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/packages/HTML/QuickForm/Controller.php(203): CRM_Core_QuickForm_Action_Display->perform(Object(CRM_SMS_Form_Group), "display")
+#5 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/packages/HTML/QuickForm/Page.php(103): HTML_QuickForm_Controller->handle(Object(CRM_SMS_Form_Group), "display")
+#6 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Controller.php(316): HTML_QuickForm_Page->handle("display")
+#7 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Invoke.php(292): CRM_Core_Controller->run((Array:3), NULL)
+#8 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Invoke.php(70): CRM_Core_Invoke::runItem((Array:13))
+#9 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/CRM/Core/Invoke.php(52): CRM_Core_Invoke::_invoke((Array:3))
+#10 /vagrant/public/dev.bfi.local/www/sites/all/modules/civicrm/drupal/civicrm.module(436): CRM_Core_Invoke::invoke((Array:3))
+#11 [internal function](): civicrm_invoke("sms", "send")
+#12 /vagrant/public/dev.bfi.local/www/includes/menu.inc(517): call_user_func_array("civicrm_invoke", (Array:2))
+#13 /vagrant/public/dev.bfi.local/www/index.php(21): menu_execute_active_handler()
+#14 {main}
+
+
