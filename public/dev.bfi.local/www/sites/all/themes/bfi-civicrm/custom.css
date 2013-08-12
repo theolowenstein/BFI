@@ -7,24 +7,67 @@
 	z-index: 100;
 }
 
+html body.page-civicrm {
+	margin-top: 56px !important;
+}
+
 body.page-civicrm #branding {
-	margin-top: 54px;
+	display: none;
 }
 
 .crm-container .crm-form-block {
 	background-color: transparent;
 }
 
+/*
 .crm-container form {
 	background-color: #EEE;
 }
+*/
 
-.crm-block table {
+.crm-accordion-wrapper,
+.crm-accordion-body .form-item {
 	background-color: #EEE;
+}
+
+.crm-block table,
+.crm-form-block table {
+	background-color: #EEE;
+}
+
+.crm-container table.form-layout-compressed {
+	background-color: #EEE;
+}
+
+.crm-container .ui-tabs .ui-tabs-nav {
+	background-color: #EEE;
+}
+
+.crm-container .odd-row, .crm-container .odd, tbody.scrollContent {
+    background-color: transparent;
+}
+
+.crm-container .listing-box,
+.crm-container .listing-box .odd-row,
+.crm-container .listing-box .even-row,
+.crm-container input.crm_phone,
+.crm-container input.crm_postal_code,
+.crm-container input.crm_postal_code_suffix {
+	background-color: white;
 }
 
 .crm-submit-buttons {
 	background-color: white;
+}
+
+.crm-container input.form-checkbox,
+.crm-container input.form-radio {
+	margin-left: 1em;
+	margin-right: .5em;
+}
+
+.crm-container input[value="1"] {
+	margin-left: 0;
 }
 
 .crm-form-block {
@@ -33,5 +76,5 @@ body.page-civicrm #branding {
 
 .crm-block .crm-submit-buttons:first-of-type,
 .crm-form-block .crm-submit-buttons:first-of-type {
-	display: none;
+	display: none !important;
 }
