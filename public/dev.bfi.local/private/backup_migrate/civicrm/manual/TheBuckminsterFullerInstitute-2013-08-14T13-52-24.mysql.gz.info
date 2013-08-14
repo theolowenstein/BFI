@@ -1,0 +1,8 @@
+filename = "TheBuckminsterFullerInstitute-2013-08-14T13-52-24"
+description = ""
+datestamp = "1376502745"
+generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
+generatorversion = "7.x-2.x"
+sites[0][version] = "7.22"
+sites[0][name] = "The Buckminster Fuller Institute"
+sites[0][url] = "http://dev.bfi.local/"
