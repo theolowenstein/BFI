@@ -437,7 +437,7 @@ expose_php = On
 ; Maximum execution time of each script, in seconds
 ; http://php.net/max-execution-time
 ; Note: This directive is hardcoded to 0 for the CLI SAPI
-max_execution_time = 30
+max_execution_time = 60
 
 ; Maximum amount of time each script may spend parsing request data. It's a good
 ; idea to limit this time on productions servers in order to eliminate unexpectedly
@@ -456,7 +456,7 @@ max_input_time = 60
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
 ; memory_limit - -1
-memory_limit = 256M
+memory_limit = 512M
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -726,7 +726,7 @@ auto_globals_jit = On
 
 ; Maximum size of POST data that PHP will accept.
 ; http://php.net/post-max-size
-post_max_size = 8M
+post_max_size = 32M
 
 ; Magic quotes are a preprocessing feature of PHP where PHP will attempt to
 ; escape any character sequences in GET, POST, COOKIE and ENV data which might
@@ -877,10 +877,10 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = 20M
+upload_max_filesize = 32M
 
 ; Maximum number of files that can be uploaded via a single request
-max_file_uploads = 20
+max_file_uploads = 32
 
 ;;;;;;;;;;;;;;;;;;
 ; Fopen wrappers ;
@@ -905,7 +905,7 @@ allow_url_include = Off
 
 ; Default timeout for socket based streams (seconds)
 ; http://php.net/default-socket-timeout
-default_socket_timeout = 60
+default_socket_timeout = 180
 
 ; If your scripts have to deal with files from Macintosh systems,
 ; or you are running on a Mac and need to deal with files from
@@ -1187,7 +1187,7 @@ mysql.default_password =
 
 ; Maximum time (in seconds) for connect timeout. -1 means no limit
 ; http://php.net/mysql.connect-timeout
-mysql.connect_timeout = 60
+mysql.connect_timeout = -1
 
 ; Trace mode. When trace_mode is active (=On), warnings for table/index scans and
 ; SQL-Errors will be displayed.
