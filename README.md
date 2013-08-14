@@ -52,7 +52,7 @@ IMPORTANT: There are a number of steps you need to take before you can run this 
 
 		$ vagrant ssh
 
-16.	Once you're done, always make sure to commit, push, and submit a Pull Request on GitHub.
+16.	Once you're done, always make sure to clear all caches, commit, push, and submit a Pull Request on GitHub.
 17.	Enjoy!
 
 Files
