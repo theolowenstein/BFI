@@ -8,7 +8,7 @@ Vagrant::Config.run do |config|
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "https://s3-us-west-2.amazonaws.com/squishy.vagrant-boxes/precise64_squishy_2013-02-09.box"
+  config.vm.box_url = "http://dl.dropbox.com/u/1537815/precise64.box"
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -28,8 +28,8 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "192.168.33.10"
 
   config.vm.share_folder("public", "/vagrant/public", "./public", :owner => "www-data", :group => "www-data")
-  # config.vm.share_folder("vagrant-root", "/vagrant", ".")
-  config.vm.share_folder("vagrant-root", "/vagrant", ".", :nfs => true)
+  # config.vm.share_folder("v-root", "/vagrant", ".")
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
   # config.vm.share_folder("v-apt", "/var/cache/apt", "~/temp/vagrant_aptcache/apt", :nfs => true)
 
   config.vm.provision :chef_solo do |chef|
@@ -40,7 +40,7 @@ Vagrant::Config.run do |config|
     # This role represents our default Drupal development stack.
     chef.add_role("drupal_lamp_varnish_dev")
     # Install an example D7 install at drupal.vbox.local.
-    # chef.add_recipe('drupal::example')
+     chef.add_recipe('drupal::example')
     # This is basically the Vagrant role.
     chef.json.merge!({
         :www_root => '/vagrant/public',
