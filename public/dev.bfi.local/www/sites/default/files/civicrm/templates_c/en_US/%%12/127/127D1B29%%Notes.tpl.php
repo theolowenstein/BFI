@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.27, created on 2013-08-14 13:50:22
+<?php /* Smarty version 2.6.27, created on 2013-08-14 16:22:17
          compiled from CRM/Contact/Form/Edit/Notes.tpl */ ?>
 <div class="crm-accordion-wrapper crm-notesBlock-accordion collapsed">
  <div class="crm-accordion-header">

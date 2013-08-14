@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.27, created on 2013-08-14 13:50:22
+<?php /* Smarty version 2.6.27, created on 2013-08-14 16:22:17
          compiled from CRM/Contact/Form/Edit/TagsAndGroups.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'cycle', 'CRM/Contact/Form/Edit/TagsAndGroups.tpl', 36, false),array('modifier', 'is_numeric', 'CRM/Contact/Form/Edit/TagsAndGroups.tpl', 40, false),)), $this); ?>

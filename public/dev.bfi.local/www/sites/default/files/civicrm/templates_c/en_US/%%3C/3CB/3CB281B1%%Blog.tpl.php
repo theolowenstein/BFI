@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.27, created on 2013-08-14 13:49:27
+<?php /* Smarty version 2.6.27, created on 2013-08-14 16:13:09
          compiled from CRM/Dashlet/Page/Blog.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('block', 'ts', 'CRM/Dashlet/Page/Blog.tpl', 32, false),)), $this); ?>

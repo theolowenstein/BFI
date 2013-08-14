@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.27, created on 2013-08-14 13:48:16
+<?php /* Smarty version 2.6.27, created on 2013-08-14 16:13:00
          compiled from CRM/Block/Dashboard.tpl */ ?>
 <div class="block-civicrm crm-container">
 <?php $_from = $this->_tpl_vars['dashboardLinks']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }if (count($_from)):

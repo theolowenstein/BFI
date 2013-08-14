@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.27, created on 2013-08-14 13:48:15
+<?php /* Smarty version 2.6.27, created on 2013-08-14 16:13:00
          compiled from CRM/Block/CreateNew.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('block', 'ts', 'CRM/Block/CreateNew.tpl', 27, false),)), $this); ?>
