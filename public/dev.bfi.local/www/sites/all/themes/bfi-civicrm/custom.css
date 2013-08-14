@@ -12,7 +12,11 @@ html body.page-civicrm {
 }
 
 body.page-civicrm #branding {
+<<<<<<< HEAD
 	display: none;
+=======
+	margin-top: 56px;
+>>>>>>> parent of 2810a44... Enabling all previous Features
 }
 
 .crm-container .crm-form-block {
