@@ -8,6 +8,7 @@ run_list(
   "role[drupal_dev]",
   "role[memcached]",
   "role[mysql_server]",
+#  "role[solr_server]",
   "role[varnish_frontend]",
   "recipe[drupal::drupal_apps]"
 )

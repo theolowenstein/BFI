@@ -1,1 +1,4 @@
-.DS_Store
+**/.DS_Store
+**/sites/default/files/civicrm/templates_c/en_US/*
+**/backup_migrate/*/scheduled/*
+.vagrant/machines/default/virtualbox/*

@@ -17,7 +17,8 @@ end
 # create a drupal db
 execute "add-drupal-db" do
   command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
-      "CREATE DATABASE bfi_drupal;\""
+      "CREATE DATABASE bfi_drupal;
+       CREATE DATABASE bfi_civicrm;\""
   action :run
   ignore_failure true
 end
