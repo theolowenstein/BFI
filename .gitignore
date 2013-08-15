@@ -1,3 +1,3 @@
 **/.DS_Store
-**/machines/default/virtualbox/*
 **/sites/default/files/civicrm/templates_c/en_US/*
+.vagrant/machines/default/virtualbox/*
