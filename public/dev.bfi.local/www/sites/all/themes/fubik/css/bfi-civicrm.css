@@ -28,12 +28,12 @@
 	background-color: transparent !important;
 }
 
-html body.page-civicrm {
-	margin-top: 59px !important;
-}
-
 body.page-civicrm #branding {
 	display: none;
+}
+
+html body.page-civicrm {
+	margin-top: 59px !important;
 }
 
 .crm-container .crm-form-block {
