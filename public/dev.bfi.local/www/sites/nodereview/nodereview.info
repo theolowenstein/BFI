@@ -1,0 +1,16 @@
+name = Node Review
+description = Fieldable entities that can be used to review nodes.
+package = Voting
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = views
+
+files[] = nodereview.controller.inc
+
+; Information added by drupal.org packaging script on 2013-09-02
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "nodereview"
+datestamp = "1378128971"
+
