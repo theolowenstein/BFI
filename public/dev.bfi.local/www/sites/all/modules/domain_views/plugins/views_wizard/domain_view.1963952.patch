@@ -1,0 +1,12 @@
+diff --git a/modules/contrib/domain_views/plugins/views_wizard/domain.inc b/modules/contrib/domain_views/plugins/views_wizard/domain.inc
+index 0471abf..67e1c3b 100644
+--- a/modules/contrib/domain_views/plugins/views_wizard/domain.inc
++++ b/modules/contrib/domain_views/plugins/views_wizard/domain.inc
+@@ -12,6 +12,7 @@ $plugin = array(
+   'available_sorts' => array(
+     'weight:DESC' => t('Sort order'),
+   ),
++  'path' => drupal_get_path('module', 'views') . '/plugins/views_wizard',
+   'form_wizard_class' => array(
+     'file' => 'views_ui_base_views_wizard.class.php',
+     'class' => 'ViewsUiBaseViewsWizard',
