@@ -100,7 +100,12 @@ html body.page-civicrm {
 	display: none !important;
 }
 
-
+// Moving Fubik description text up a bit so to be able to edit machine names
 body.fubik div.form-item div.description {
 	bottom: 110%;
+}
+
+// Removing Review Round checkboxes from Relation dialogue box
+form .form-item div.field-type-list-boolean {
+	display: none !important;
 }
