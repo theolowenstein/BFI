@@ -105,7 +105,7 @@ body.fubik div.form-item div.description {
 	bottom: 110%;
 }
 
-// Removing Review Round checkboxes from Relation dialogue box
+// Removing Review Round checkboxes from Relation dialogue box - Need to figure out why not working
 form .form-item div.field-type-list-boolean {
 	display: none !important;
 }

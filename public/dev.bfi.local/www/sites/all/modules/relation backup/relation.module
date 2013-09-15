@@ -80,7 +80,6 @@ function relation_entity_property_info() {
       'description' => t('The endpoints of the relation.'),
       'setter callback' => 'relation_rules_set_endpoints',
       'getter callback' => 'relation_rules_get_endpoints',
-      'query callback' => 'relation_rules_query_endpoints',
       'setter permission' => 'administer nodes',
       'required' => TRUE,
     ),

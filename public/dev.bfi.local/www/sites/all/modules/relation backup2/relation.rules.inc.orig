@@ -455,19 +455,3 @@ function relation_rules_fetch_endpoint($relation, $entity_type, $number = 1) {
   // We didn't find any entities in the relation that matched the provided conditions.
   return NULL;
 }
-
-/**
- * Endpoint property query callback.
- */
-function relation_rules_query_endpoints($type = 'relation', $property = 'endpoints', $endpoints = array(), $limit = 0) {
-  $first = is_array($endpoints) ? array_shift($endpoints) : $endpoints;
-  $return = relation_query($first->type(), $first->getIdentifier());
-  if (is_array($endpoints)) {
-    foreach ($endpoints as $endpoint) {
-      $return = $return->related($endpoint->type(), $endpoint->getIdentifier());
-    }
-  }
-  $return = $return->execute();
-
-  return $return;
-}
