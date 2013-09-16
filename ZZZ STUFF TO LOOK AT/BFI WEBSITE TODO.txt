@@ -7,4 +7,9 @@ FOR TRIMTAB ITEMS:
 
 
 Challenge Projects:
-- Figure out why relation not being fetched at all
+- Figure out why relation not being fetched at all - stuff to try:
+-- fetch by id
+-- switch to dev
+-- adding variable to reviewer relationship to get via regular node field - combining ids?
+-- reducing cached refs to just the one, to help w/ selections
+-- 
