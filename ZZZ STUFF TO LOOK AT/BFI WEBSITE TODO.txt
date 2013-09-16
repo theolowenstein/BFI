@@ -1,0 +1,15 @@
+FOR TRIMTAB ITEMS:
+- On creating/editing item: make sure if adding newly to section, create reference from trim tab issue in correct node reference field, based on taxonomy term selected
+- On adding item within trim tab issue form: if/when switching sections, make sure in rules to switch over item's taxonomy terms, too…
+
+- make vbo way to bulk add reviewers to projects
+- reset relations for review on assignation
+
+
+Challenge Projects:
+- Figure out why relation not being fetched at all - stuff to try:
+-- fetch by id
+-- switch to dev
+-- adding variable to reviewer relationship to get via regular node field - combining ids?
+-- reducing cached refs to just the one, to help w/ selections
+-- 

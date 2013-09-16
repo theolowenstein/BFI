@@ -12,6 +12,7 @@ $plugin = array(
   'available_sorts' => array(
     'weight:DESC' => t('Sort order'),
   ),
+  'path' => drupal_get_path('module', 'views') . '/plugins/views_wizard',
   'form_wizard_class' => array(
     'file' => 'views_ui_base_views_wizard.class.php',
     'class' => 'ViewsUiBaseViewsWizard',
