@@ -1,0 +1,6 @@
+name = BFI Challenge Project Review
+description = Container for any custom PHP that needs to happen around BFC Project Review
+core = 7.x
+dependencies[] = bfi
+dependencies[] = bfi_form_tweaks
+package = BFI

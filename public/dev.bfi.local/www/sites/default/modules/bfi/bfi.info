@@ -1,0 +1,5 @@
+name = BFI Main
+description = Empty container module for all custom BFI modules
+core = 7.x
+dependencies[] = features
+package = BFI

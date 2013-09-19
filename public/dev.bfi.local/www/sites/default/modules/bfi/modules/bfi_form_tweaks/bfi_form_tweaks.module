@@ -1,12 +1,15 @@
 <?php
 
 
-function hide_reviewer_in_fields(&$hidee) {
+function hide_reviewer_in_fields(&$hidee) {		// For hiding review_in fields
 	hide($hidee['field_project_review_r1_in']);
 	hide($hidee['field_project_review_r2_in']);
 	hide($hidee['field_project_review_r3_in']);
 }
 
+/*
+ * Implementing hook_form_alter
+ */
 function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 
   dpm($form);
