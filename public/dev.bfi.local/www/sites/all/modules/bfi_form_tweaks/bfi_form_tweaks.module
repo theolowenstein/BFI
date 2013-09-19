@@ -1,9 +1,19 @@
 <?php
 
-function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
+function hide_reviewer_ins(&$form, $key) {
+	hide($form['field_project_reviewers']['und'][$key]['relation_options']['field_project_review_r1_in']);
+	hide($form['field_project_reviewers']['und'][$key]['relation_options']['field_project_review_r2_in']);
+	hide($form['field_project_reviewers']['und'][$key]['relation_options']['field_project_review_r3_in']);
+}
 
-  if ($form_id == 'project_node_form') {
+function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
   	dpm($form);
+  if ($form_id == 'project_node_form') {
+
+  	$count_reviewer = count($form['field_project_reviewers']['und']) - 13;
+  	for ($i = 0; $i < $count_reviewer; $i++) {
+  		hide_reviewer_ins($form, $i);
+  	}
   }
 
 /*
