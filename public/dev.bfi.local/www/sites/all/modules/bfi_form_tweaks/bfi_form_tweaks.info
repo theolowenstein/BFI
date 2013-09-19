@@ -1,0 +1,4 @@
+name = BFI Form Tweaks
+description = Custom module for BFI tweaking form settings
+core = 7.x
+package = BFI

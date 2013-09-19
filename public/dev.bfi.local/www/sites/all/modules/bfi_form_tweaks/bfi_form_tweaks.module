@@ -1,0 +1,15 @@
+<?php
+
+function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == 'project_node_form') {
+  	dpm($form);
+  }
+
+/*
+  if (($form_id) == 'page_node_form') {
+    dpm($form);
+    dpm($form_state);
+  }
+*/
+}
