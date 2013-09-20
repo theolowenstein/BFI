@@ -1,0 +1,36 @@
+diff --git a/relation.module b/relation.module
+index 9dab6c6..9972fa8 100644
+--- a/relation.module
++++ b/relation.module
+@@ -80,6 +80,7 @@ function relation_entity_property_info() {
+       'description' => t('The endpoints of the relation.'),
+       'setter callback' => 'relation_rules_set_endpoints',
+       'getter callback' => 'relation_rules_get_endpoints',
++      'query callback' => 'relation_rules_query_endpoints',
+       'setter permission' => 'administer nodes',
+       'required' => TRUE,
+     ),
+diff --git a/relation.rules.inc b/relation.rules.inc
+index ecf3658..439bc98 100644
+--- a/relation.rules.inc
++++ b/relation.rules.inc
+@@ -450,3 +450,19 @@ function relation_rules_fetch_endpoint($relation, $entity_type, $number = 1) {
+   // We didn't find any entities in the relation that matched the provided conditions.
+   return NULL;
+ }
++
++/**
++ * Endpoint property query callback.
++ */
++function relation_rules_query_endpoints($type = 'relation', $property = 'endpoints', $endpoints = array(), $limit = 0) {
++  $first = is_array($endpoints) ? array_shift($endpoints) : $endpoints;
++  $return = relation_query($first->type(), $first->getIdentifier());
++  if (is_array($endpoints)) {
++    foreach ($endpoints as $endpoint) {
++      $return = $return->related($endpoint->type(), $endpoint->getIdentifier());
++    }
++  }
++  $return = $return->execute();
++
++  return $return;
++}
