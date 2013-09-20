@@ -1,0 +1,12 @@
+// Removing unnecessary project review in fields
+form table div.field-name-field-project-review-r1-in,
+form table div.field-name-field-project-review-r2-in,
+form table div.field-name-field-project-review-r3-in {
+	display: none !important;
+}
+
+// Moving Fubik description text up a bit so to be able to edit machine names
+body.fubik div.form-item div.description {
+	bottom: 110%;
+}
+
