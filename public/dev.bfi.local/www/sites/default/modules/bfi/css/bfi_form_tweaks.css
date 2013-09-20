@@ -1,0 +1,14 @@
+// CSS file ref currently not working, so put any custom css in $inline var in module itself.
+
+// Removing unnecessary project review in fields
+form div.field-name-field-project-review-r1-in,
+form div.field-name-field-project-review-r2-in,
+form div.field-name-field-project-review-r3-in {
+	display: none !important;
+}
+
+// Moving Fubik description text up a bit so to be able to edit machine names
+body.fubik div.form-item div.description {
+	bottom: 110%;
+}
+
