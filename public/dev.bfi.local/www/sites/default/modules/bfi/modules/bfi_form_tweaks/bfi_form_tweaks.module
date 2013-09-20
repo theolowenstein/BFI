@@ -12,7 +12,7 @@ function hide_reviewer_in_fields(&$hidee) {		// For hiding review_in fields
  */
 function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 
-  dpm($form);
+//  dpm($form);
 
   switch ($form_id) {
   	case 'project_node_form':

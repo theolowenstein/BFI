@@ -19,6 +19,18 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
+		'bfi_project_review_action_dpm_project' => array(
+			'label' => t('DPM all project stuff'),
+			'group' => t('BFI Custom'),
+			/*
+			'parameter' => array(
+				'project' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Project'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),*/
+		),
 
 	);
 
@@ -42,14 +54,44 @@ function bfi_project_review_action_review_in($project) {
 		switch ($project->field_project_round['und'][0]['value']) {
 			case 1:
 				$relation_wrapper->field_project_review_r1_in->set(1);
+				$relation_wrapper->save();
 				break;
 			case 2:
 				$relation_wrapper->field_project_review_r2_in->set(1);
+				$relation_wrapper->save();
 				break;
 			case 3;
 				$relation_wrapper->field_project_review_r3_in->set(1);
+				$relation_wrapper->save();
 				break;
 		}
-		$relation_wrapper->save();
+		
 	}
 }
+
+
+function bfi_project_review_action_dpm_project() {
+	$node = menu_get_object();
+
+	// Code below borrowed from http://stackoverflow.com/questions/8673773/in-drupal-7-how-do-i-get-a-list-of-all-blocks-being-used-on-the-page
+/*	global $theme;
+	$all_regions = system_region_list($theme);
+	$blocks = array();
+	foreach (array_keys($all_regions) as $region) {
+		$blocks += block_list($region);
+	} 
+	global $theme;
+	$blocks = _block_rehash($theme);
+*/
+
+	$blocks = block_list('sidebar_second');
+	if ($node->type == 'project') {
+		dpm($node);
+		dpm($blocks);
+	}
+
+}
+
+
+
+
