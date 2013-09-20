@@ -47,10 +47,8 @@ function bfi_project_review_action_review_in($project) {
 		->related('node', $project->nid)
 		->execute();
 	$relations = entity_load('relation', array_keys($rids));
-	dpm($relations);
 	if (count($relations) == 1) {
 		$relation_wrapper = entity_metadata_wrapper('relation', reset($relations)); // Wrapping fetch relation with Entity API wrapper (https://drupal.org/node/1021556)
-		dpm(t('Round is: '.$project->field_project_round['und'][0]['value']));
 		switch ($project->field_project_round['und'][0]['value']) {
 			case 1:
 				$relation_wrapper->field_project_review_r1_in->set(1);
