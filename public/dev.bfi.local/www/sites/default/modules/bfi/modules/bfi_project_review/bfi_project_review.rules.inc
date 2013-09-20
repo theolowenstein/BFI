@@ -8,13 +8,31 @@
 function bfi_project_review_rules_action_info() {
 	$actions = array(
 		'bfi_project_review_action_review_in' => array(
-			'label' => t('Register that review submitted by reviewer per round.'),
+			'label' => t('register Project Review submission, per reviewer, per round'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
 				'project' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'node',		// Specifying type of entity to be passed
 					'label' => t('Project'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
+		'bfi_project_review_action_fetch_project' => array(
+			'label' => t('fetch current project via relation from entityform'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'review_current' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'entityform',		// Specifying type of entity to be passed
+					'label' => t('Current Review'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+			'provides' => array(
+				'project_current' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Current Project'),
 				),
 			),
 		),
@@ -38,7 +56,7 @@ function bfi_project_review_rules_action_info() {
 }
 
 /*
- * Defining what to actually do
+ * Setting Review Round submissions register per user, per round. The vars then determine if the review note form is visible later.
  */
 function bfi_project_review_action_review_in($project) {
 	// Code below adapted from http://drupal.stackexchange.com/questions/85108/access-field-on-relation-from-rule
@@ -67,25 +85,17 @@ function bfi_project_review_action_review_in($project) {
 	}
 }
 
+function bfi_project_review_action_fetch_project($review_current) {
+	$project_current = relation_get_related_entity('entityform', $review_current->entityform_id);
+	return array(
+		'project_current' => $project_current,
+	);
+}
 
 function bfi_project_review_action_dpm_project() {
 	$node = menu_get_object();
-
-	// Code below borrowed from http://stackoverflow.com/questions/8673773/in-drupal-7-how-do-i-get-a-list-of-all-blocks-being-used-on-the-page
-/*	global $theme;
-	$all_regions = system_region_list($theme);
-	$blocks = array();
-	foreach (array_keys($all_regions) as $region) {
-		$blocks += block_list($region);
-	} 
-	global $theme;
-	$blocks = _block_rehash($theme);
-*/
-
-	$blocks = block_list('sidebar_second');
 	if ($node->type == 'project') {
 		dpm($node);
-		dpm($blocks);
 	}
 
 }

@@ -29,13 +29,23 @@ function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 }
 */
 
+function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
+
+//  dpm($form);
+
+}
+
 $mod_name = 'bfi_form_tweaks';
 $path = drupal_get_path('module', $mod_name).'/css/'.$mod_name.'.css';
-// Currently set to inline, which is less than idea, as the css file reference wouldn't work for some reason. Debug this when have time.
+// Currently set to inline b/c the css file reference wouldn't work for some reason. Not ideal. Debug this when have time.
 $inline = '
-form table div.field-name-field-project-review-r1-in,
-form table div.field-name-field-project-review-r2-in,
-form table div.field-name-field-project-review-r3-in {
+form div.field-name-field-project-review-r1-in,
+form div.field-name-field-project-review-r2-in,
+form div.field-name-field-project-review-r3-in {
+  display: none !important;
+}
+
+div.view-bfc-project-review-form-block div.entityform-type-entityform-type {
   display: none !important;
 }
 
