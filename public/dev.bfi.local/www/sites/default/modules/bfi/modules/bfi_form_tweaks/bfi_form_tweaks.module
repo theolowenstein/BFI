@@ -1,6 +1,6 @@
 <?php
 
-
+/*
 function hide_reviewer_in_fields(&$hidee) {		// For hiding review_in fields
 	hide($hidee['field_project_review_r1_in']);
 	hide($hidee['field_project_review_r2_in']);
@@ -9,7 +9,7 @@ function hide_reviewer_in_fields(&$hidee) {		// For hiding review_in fields
 
 /*
  * Implementing hook_form_alter
- */
+ 
 function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 
 //  dpm($form);
@@ -27,3 +27,19 @@ function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
   }
 
 }
+*/
+
+$mod_name = 'bfi_form_tweaks';
+$path = drupal_get_path('module', $mod_name).'/css/'.$mod_name.'.css';
+// Currently set to inline, which is less than idea, as the css file reference wouldn't work for some reason. Debug this when have time.
+$inline = '
+form table div.field-name-field-project-review-r1-in,
+form table div.field-name-field-project-review-r2-in,
+form table div.field-name-field-project-review-r3-in {
+  display: none !important;
+}
+
+body.fubik div.form-item div.description {
+  bottom: 110%;
+}';
+drupal_add_css($inline, array('type'=>'inline', 'group' => CSS_DEFAULT, 'every_page' => TRUE));
