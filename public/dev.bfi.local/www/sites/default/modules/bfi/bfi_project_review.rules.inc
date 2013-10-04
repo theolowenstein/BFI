@@ -61,28 +61,30 @@ function bfi_project_review_rules_action_info() {
 function bfi_project_review_action_review_in($project) {
 	// Code below adapted from http://drupal.stackexchange.com/questions/85108/access-field-on-relation-from-rule
 	global $user;
-	$rids = relation_query('user', $user->uid)
+	$user_rids = relation_query('user', $user->uid)
 		->related('node', $project->nid)
 		->execute();
-	$relations = entity_load('relation', array_keys($rids));
-	if (count($relations) == 1) {
-		$relation_wrapper = entity_metadata_wrapper('relation', reset($relations)); // Wrapping fetch relation with Entity API wrapper (https://drupal.org/node/1021556)
-		switch ($project->field_project_round['und'][0]['value']) {
+	$user_rels = entity_load('relation', array_keys($user_rids));
+	if (count($user_rels) == 1) {
+		$user_rel_wrapper = entity_metadata_wrapper('relation', reset($user_rels)); // Wrapping fetch relation with Entity API wrapper (https://drupal.org/node/1021556)
+		$curr_round = $project->field_project_round['und'][0]['value'];
+		switch ($curr_round) {
 			case 1:
-				$relation_wrapper->field_project_review_r1_in->set(1);
-				$relation_wrapper->save();
+				$user_rel_wrapper->field_project_review_r1_in->set(1);
+				$user_rel_wrapper->save();
 				break;
 			case 2:
-				$relation_wrapper->field_project_review_r2_in->set(1);
-				$relation_wrapper->save();
+				$user_rel_wrapper->field_project_review_r2_in->set(1);
+				$user_rel_wrapper->save();
 				break;
 			case 3;
-				$relation_wrapper->field_project_review_r3_in->set(1);
-				$relation_wrapper->save();
+				$user_rel_wrapper->field_project_review_r3_in->set(1);
+				$user_rel_wrapper->save();
 				break;
 		}
 		
 	}
+
 }
 
 function bfi_project_review_action_fetch_project($review_current) {
