@@ -66,10 +66,9 @@ function bfi_project_review_tally_criteria(&$field) {
 }
 
 function bfi_project_review_set_averages(&$field, $cumulative, $count) {
-	$average = round($cumulative/$count)/10;
-	$field[LANGUAGE_NONE][0]['user'] = $average;
-	$field[LANGUAGE_NONE][0]['average'] = $average;
-	return $average;
+	$average = $cumulative/(10*$count);
+	$field->set($average);
+	return $average;	
 }
 
 function bfi_project_review_average_criteria_scores(&$project, $round) {
@@ -86,7 +85,6 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 		}
 	}
 	$evals = entity_load('entityform', $eval_ids);
-	dpm(count($evals).' Evaluations');
 
 	$wrap_ids = array();
 	foreach($evals as $key => $value) {					// Getting IDs of criteria evaluation field collections
@@ -96,35 +94,43 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	}
 	$wraps = entity_load('field_collection_item', $wrap_ids);
 	$wrap_count = count($wraps);
-	dpm($wrap_count.' Wraps');
 
 	// Tallying up criteria scores
-	$crit_vis = $crit_comp = $crit_antic = $crit_ecol = $crit_feas = $crit_verif = $crit_rep = 0;
+	$cum_vis = $cum_comp = $cum_antic = $cum_ecol = $cum_feas = $cum_verif = $cum_rep = 0;
 	foreach($wraps as $key => $value) {
-		$crit_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
-		$crit_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
-		$crit_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
-		$crit_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
-		$crit_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
-		$crit_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
-		$crit_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
+		$cum_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
+		$cum_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
+		$cum_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
+		$cum_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
+		$cum_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
+		$cum_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
+		$cum_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
 	}
 
-	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {			// If Average for round ($round - 1)already exists, update it
-		$score_coll_id = $project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1]['value'];
-		$score_coll = entity_load('field_collection_item', array($score_coll_id)); // Load that field collection item, one coll back for the nested field collection
 
-		dpm($score_coll);
+	// If Average for round ($round - 1) already exists, update it
+	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node
 
-//		$score_coll_wrap->save();		// For some reason, this isn't working. Figure out why.
 	} else {		// Else, make new field collection
-		$new_score_coll = entity_create('field_collection_item', array('field_name' => 'field_page_collection1')); // Create new field collection item.
-		$new_score_coll->setHostEntity('node', $node); // Attach it to the node.
-		$new_score_coll->field_page_collection1_text1[LANGUAGE_NONE][0]['value'] = 'some value for text field 1'; // Fill value for field_page_collection1_text1.
-		$new_score_coll->field_page_collection1_text2[LANGUAGE_NONE][0]['value'] = 'some value for text field 2'; // Fill value for field_page_collection1_text2.
-		$new_score_coll->save(); // Save field-collection item.
+		$score_coll = entity_create('field_collection_item', array('field_name' => 'field_project_review_score_rds')); // Create new field collection item.
+		$score_coll->setHostEntity('node', $project); // Attach it to the node.
+		$score_coll->save();
 	}
+		$score_coll_id = $project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1]['value'];
+		$score_coll = entity_load('field_collection_item', array($score_coll_id));
+	$score_coll_wrapper = entity_metadata_wrapper('field_collection_item', reset($score_coll));
+	$score_coll_wrapper->field_project_round_eval->set($round);
+	$ave_vis = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_vis, $cum_vis, $wrap_count);
+	$ave_comp = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_comp, $cum_comp, $wrap_count);
+	$ave_antic = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_antic, $cum_antic, $wrap_count);
+	$ave_ecol = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_ecol, $cum_ecol, $wrap_count);
+	$ave_feas = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_feas, $cum_feas, $wrap_count);
+	$ave_verif = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_verif, $cum_verif, $wrap_count);
+	$ave_rep = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_rep, $cum_rep, $wrap_count);
+	$score_coll_wrapper->save();
+	dpm($score_coll);
 	dpm('Vis '.$ave_vis.', Comp '.$ave_comp.', Antic '.$ave_antic.', Ecol '.$ave_ecol.', Feas '.$ave_feas.', Verif '.$ave_verif.', Rep '.$ave_rep);
+
 }
 
 
