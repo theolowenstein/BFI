@@ -55,6 +55,79 @@ function bfi_project_review_rules_action_info() {
 	return $actions;
 }
 
+function bfi_project_review_tally_criteria(&$field) {
+	$rating = 0;
+	if (isset($field['und'][0]['user'])) {
+		$rating = $field['und'][0]['user'];
+	} else if (isset($field['und'][0]['rating'])) {
+		$rating = $field['und'][0]['rating'];
+	}
+	return $rating;
+}
+
+function bfi_project_review_set_averages(&$field, $cumulative, $count) {
+	$average = round($cumulative/$count)/10;
+	$field[LANGUAGE_NONE][0]['user'] = $average;
+	$field[LANGUAGE_NONE][0]['average'] = $average;
+	return $average;
+}
+
+function bfi_project_review_average_criteria_scores(&$project, $round) {
+	$rel_ids = relation_query('node', $project->nid)
+		->execute();
+	foreach($rel_ids as $key => $value) {				// Finding only evaluation relations
+		if ($value->relation_type != 'bfc_evaluation') unset($rel_ids[$key]);
+	}
+	$rels = entity_load('relation', array_keys($rel_ids));
+	$eval_ids = array();
+	foreach($rels as $key => $value) {					// Finding the evals for just this round
+		if ($value->field_project_round_eval['und'][0]['value'] == $round) {
+			$eval_ids[] = $value->endpoints['und'][0]['entity_id'];
+		}
+	}
+	$evals = entity_load('entityform', $eval_ids);
+	dpm(count($evals).' Evaluations');
+
+	$wrap_ids = array();
+	foreach($evals as $key => $value) {					// Getting IDs of criteria evaluation field collections
+		if (isset($value->field_project_review_score_wrap['und'][0]['value'])) {
+			$wrap_ids[] = $value->field_project_review_score_wrap['und'][0]['value'];
+		}
+	}
+	$wraps = entity_load('field_collection_item', $wrap_ids);
+	$wrap_count = count($wraps);
+	dpm($wrap_count.' Wraps');
+
+	// Tallying up criteria scores
+	$crit_vis = $crit_comp = $crit_antic = $crit_ecol = $crit_feas = $crit_verif = $crit_rep = 0;
+	foreach($wraps as $key => $value) {
+		$crit_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
+		$crit_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
+		$crit_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
+		$crit_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
+		$crit_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
+		$crit_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
+		$crit_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
+	}
+
+	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {			// If Average for round ($round - 1)already exists, update it
+		$score_coll_id = $project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1]['value'];
+		$score_coll = entity_load('field_collection_item', array($score_coll_id)); // Load that field collection item, one coll back for the nested field collection
+
+		dpm($score_coll);
+
+//		$score_coll_wrap->save();		// For some reason, this isn't working. Figure out why.
+	} else {		// Else, make new field collection
+		$new_score_coll = entity_create('field_collection_item', array('field_name' => 'field_page_collection1')); // Create new field collection item.
+		$new_score_coll->setHostEntity('node', $node); // Attach it to the node.
+		$new_score_coll->field_page_collection1_text1[LANGUAGE_NONE][0]['value'] = 'some value for text field 1'; // Fill value for field_page_collection1_text1.
+		$new_score_coll->field_page_collection1_text2[LANGUAGE_NONE][0]['value'] = 'some value for text field 2'; // Fill value for field_page_collection1_text2.
+		$new_score_coll->save(); // Save field-collection item.
+	}
+	dpm('Vis '.$ave_vis.', Comp '.$ave_comp.', Antic '.$ave_antic.', Ecol '.$ave_ecol.', Feas '.$ave_feas.', Verif '.$ave_verif.', Rep '.$ave_rep);
+}
+
+
 /*
  * Setting Review Round submissions register per user, per round. The vars then determine if the review note form is visible later.
  */
@@ -72,10 +145,12 @@ function bfi_project_review_action_review_in($project) {
 			case 1:
 				$user_rel_wrapper->field_project_review_r1_in->set(1);
 				$user_rel_wrapper->save();
+				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 2:
 				$user_rel_wrapper->field_project_review_r2_in->set(1);
 				$user_rel_wrapper->save();
+				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 3;
 				$user_rel_wrapper->field_project_review_r3_in->set(1);
