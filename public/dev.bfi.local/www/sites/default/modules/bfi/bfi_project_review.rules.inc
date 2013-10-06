@@ -195,6 +195,7 @@ function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
 		dpm($field_coll_node);
 		foreach ($field_coll_form[$field_coll_form_id] as $key => $value) {
 			if (substr($key, 0, 6) == 'field_') {
+				$field_coll_node->$key = $value;
 				dpm($key.' = '.$value);
 			}
 		}
