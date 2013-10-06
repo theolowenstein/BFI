@@ -183,10 +183,27 @@ function bfi_project_review_action_review_in($project) {
 }
 
 function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
-	$entityform_wrapper = entity_metadata_wrapper('entityform', $entityform->entityform_id);
-	if (isset($entityform_wrapper->field_application_questions)) {
-		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
-		node_save($node);
+	if (isset($entityform->field_application_questions)) {
+		$field_coll_form_id = $entityform->field_application_questions[LANGUAGE_NONE][0]['value'];
+		$field_coll_form = entity_load('field_collection_item', array($field_coll_form_id));
+		$field_coll_node = entity_create('field_collection_item', array('field_name' => 'field_application_questions'));
+		$field_coll_node->setHostEntity('node', $node);
+
+		dpm($field_coll_form);
+		dpm($field_coll_node);
+		$field_coll_node->save();
+		dpm($field_coll_node);
+		foreach ($field_coll_form[$field_coll_form_id] as $key => $value) {
+			if (substr($key, 0, 6) == 'field_') {
+				dpm($key.' = '.$value);
+			}
+		}
+		$field_coll_node->save();
+		dpm($field_coll_node);
+//		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
+//		$entityform_wrapper->field_application_questions = NULL;
+//		node_save($node);
+//		$entityform_wrapper->save();
 	}
 }
 
@@ -202,7 +219,6 @@ function bfi_project_review_action_dpm_project() {
 	if ($node->type == 'project') {
 		dpm($node);
 	}
-
 }
 
 
