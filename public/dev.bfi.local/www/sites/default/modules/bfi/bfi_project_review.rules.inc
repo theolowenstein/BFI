@@ -38,10 +38,10 @@ function bfi_project_review_rules_action_info() {
 		),
 
 		'bfi_project_review_action_copy_field_coll_to_node' => array(
-			'label' => t('Add Revision ID to transferred Field Collection on Entityform Submission'),
+			'label' => t('Copy Field Collection from Entityform to Node'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
-				'entityform' => array(			// Name of the parameter to be supplied via Rules UI
+				'source' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'entityform',		// Specifying type of entity to be passed
 					'label' => t('Origin Entityform'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
@@ -187,10 +187,10 @@ function bfi_project_review_action_review_in($project) {
 
 }
 
-function bfi_project_review_action_copy_field_coll_to_node($entityform, $node, $field) {
+function bfi_project_review_action_copy_field_coll_to_node($source, $node, $field) {
 	$field_to_get_name = $field->field_name;
-	if (isset($entityform->$field_to_get_name)) {
-		$field_to_get = $entityform->$field_to_get_name;
+	if (isset($source->$field_to_get_name)) {
+		$field_to_get = $source->$field_to_get_name;
 		$field_to_get_id = $field_to_get[LANGUAGE_NONE][0]['value'];
 		$field_coll_form = entity_load('field_collection_item', array($field_to_get_id));
 
