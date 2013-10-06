@@ -37,7 +37,7 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
-		'bfi_project_review_action_add_fc_rev_id' => array(
+		'bfi_project_review_action_copy_field_coll_to_node' => array(
 			'label' => t('Add Revision ID to transferred Field Collection on Entityform Submission'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
@@ -49,6 +49,11 @@ function bfi_project_review_rules_action_info() {
 				'node' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'node',		// Specifying type of entity to be passed
 					'label' => t('Recipient Node'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'field' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'field_collection_item',		// Specifying type of entity to be passed
+					'label' => t('Desired Collection'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
 				),
 			),
@@ -182,29 +187,22 @@ function bfi_project_review_action_review_in($project) {
 
 }
 
-function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
-	if (isset($entityform->field_application_questions)) {
-		$field_coll_form_id = $entityform->field_application_questions[LANGUAGE_NONE][0]['value'];
-		$field_coll_form = entity_load('field_collection_item', array($field_coll_form_id));
-		$field_coll_node = entity_create('field_collection_item', array('field_name' => 'field_application_questions'));
+function bfi_project_review_action_copy_field_coll_to_node($entityform, $node, $field) {
+	$field_to_get_name = $field->field_name;
+	if (isset($entityform->$field_to_get_name)) {
+		$field_to_get = $entityform->$field_to_get_name;
+		$field_to_get_id = $field_to_get[LANGUAGE_NONE][0]['value'];
+		$field_coll_form = entity_load('field_collection_item', array($field_to_get_id));
+
+		$field_coll_node = entity_create('field_collection_item', array('field_name' => $field_to_get_name));
 		$field_coll_node->setHostEntity('node', $node);
 
-		dpm($field_coll_form);
-		dpm($field_coll_node);
-		$field_coll_node->save();
-		dpm($field_coll_node);
-		foreach ($field_coll_form[$field_coll_form_id] as $key => $value) {
+		foreach ($field_coll_form[$field_to_get_id] as $key => $value) {
 			if (substr($key, 0, 6) == 'field_') {
 				$field_coll_node->$key = $value;
-				dpm($key.' = '.$value);
 			}
 		}
 		$field_coll_node->save();
-		dpm($field_coll_node);
-//		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
-//		$entityform_wrapper->field_application_questions = NULL;
-//		node_save($node);
-//		$entityform_wrapper->save();
 	}
 }
 
