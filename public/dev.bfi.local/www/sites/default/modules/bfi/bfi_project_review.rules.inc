@@ -57,10 +57,10 @@ function bfi_project_review_rules_action_info() {
 
 function bfi_project_review_tally_criteria(&$field) {
 	$rating = 0;
-	if (isset($field['und'][0]['user'])) {
-		$rating = $field['und'][0]['user'];
-	} else if (isset($field['und'][0]['rating'])) {
-		$rating = $field['und'][0]['rating'];
+	if (isset($field[LANGUAGE_NONE][0]['user'])) {
+		$rating = $field[LANGUAGE_NONE][0]['user'];
+	} else if (isset($field[LANGUAGE_NONE][0]['rating'])) {
+		$rating = $field[LANGUAGE_NONE][0]['rating'];
 	}
 	return $rating;
 }
@@ -80,21 +80,20 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	$rels = entity_load('relation', array_keys($rel_ids));
 	$eval_ids = array();
 	foreach($rels as $key => $value) {					// Finding the evals for just this round
-		if ($value->field_project_round_eval['und'][0]['value'] == $round) {
-			$eval_ids[] = $value->endpoints['und'][0]['entity_id'];
+		if ($value->field_project_round_eval[LANGUAGE_NONE][0]['value'] == $round) {
+			$eval_ids[] = $value->endpoints[LANGUAGE_NONE][0]['entity_id'];
 		}
 	}
 	$evals = entity_load('entityform', $eval_ids);
 
 	$wrap_ids = array();
 	foreach($evals as $key => $value) {					// Getting IDs of criteria evaluation field collections
-		if (isset($value->field_project_review_score_wrap['und'][0]['value'])) {
-			$wrap_ids[] = $value->field_project_review_score_wrap['und'][0]['value'];
+		if (isset($value->field_project_review_score_wrap[LANGUAGE_NONE][0]['value'])) {
+			$wrap_ids[] = $value->field_project_review_score_wrap[LANGUAGE_NONE][0]['value'];
 		}
 	}
 	$wraps = entity_load('field_collection_item', $wrap_ids);
 	$wrap_count = count($wraps);
-	dpm('something here lnknlse');
 
 	// Tallying up criteria scores
 	$cum_vis = $cum_comp = $cum_antic = $cum_ecol = $cum_feas = $cum_verif = $cum_rep = 0;
@@ -143,7 +142,7 @@ function bfi_project_review_action_review_in($project) {
 	$user_rels = entity_load('relation', array_keys($user_rids));
 	if (count($user_rels) == 1) {
 		$user_rel_wrapper = entity_metadata_wrapper('relation', reset($user_rels)); // Wrapping fetch relation with Entity API wrapper (https://drupal.org/node/1021556)
-		$curr_round = $project->field_project_round['und'][0]['value'];
+		$curr_round = $project->field_project_round[LANGUAGE_NONE][0]['value'];
 		switch ($curr_round) {
 			case 1:
 				$user_rel_wrapper->field_project_review_r1_in->set(1);
