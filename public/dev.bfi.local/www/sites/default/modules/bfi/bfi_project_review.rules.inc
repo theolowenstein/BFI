@@ -109,7 +109,7 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 
 
 	// If Average for round ($round - 1) already exists, update it
-	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node
+	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node and https://drupal.org/node/1106182
 		$score_coll_id = $project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1]['value'];
 		$score_coll = entity_load('field_collection_item', array($score_coll_id));
 	} else {		// Else, make new field collection
