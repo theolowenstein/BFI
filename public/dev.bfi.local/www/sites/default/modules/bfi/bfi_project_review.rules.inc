@@ -118,17 +118,17 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	$wrap_count = count($wraps);
 
 	// Tallying up criteria scores
-	$cum_vis = $cum_comp = $cum_antic = $cum_ecol = $cum_feas = $cum_verif = $cum_rep = 0;
-	foreach($wraps as $key => $value) {
-		$cum_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
-		$cum_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
-		$cum_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
-		$cum_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
-		$cum_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
-		$cum_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
-		$cum_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
+	$scores_cum = array();
+	foreach ($wraps as $key => $eval) {
+		foreach ($eval as $field => $value) {
+			if(substr($field, 0, 26) == 'field_project_review_score') {
+				$bitlet = substr($field, 27);
+				if (isset($scores_cum[$bitlet])) $scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
+				else $scores_cum[$bitlet] = 0;
+			}
+		}
 	}
-
+	dpm($scores_cum);
 
 	// If Average for round ($round - 1) already exists, update it
 	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node and https://drupal.org/node/1106182
@@ -141,13 +141,11 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	}
 	$score_coll_wrapper = entity_metadata_wrapper('field_collection_item', reset($score_coll));
 	$score_coll_wrapper->field_project_round_eval->set($round);
-	$ave_vis = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_vis, $cum_vis, $wrap_count);
-	$ave_comp = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_comp, $cum_comp, $wrap_count);
-	$ave_antic = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_antic, $cum_antic, $wrap_count);
-	$ave_ecol = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_ecol, $cum_ecol, $wrap_count);
-	$ave_feas = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_feas, $cum_feas, $wrap_count);
-	$ave_verif = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_verif, $cum_verif, $wrap_count);
-	$ave_rep = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_rep, $cum_rep, $wrap_count);
+	foreach ($score_coll_wrapper as $field => $value) {
+		if (substr($field, 0, 24) == 'field_project_review_ave') {
+			dpm('Ave '.substr($field, 25).' = '.bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count));
+		}
+	}
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
 }
 
