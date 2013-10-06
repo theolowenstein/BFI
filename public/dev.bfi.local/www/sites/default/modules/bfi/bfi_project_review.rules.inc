@@ -185,7 +185,8 @@ function bfi_project_review_action_review_in($project) {
 function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
 	$entityform_wrapper = entity_metadata_wrapper('entityform', $entityform->entityform_id);
 	if (isset($entityform_wrapper->field_application_questions)) {
-		dpm($entityform_wrapper->field_application_questions->revision_id->value());
+		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
+		node_save($node);
 	}
 }
 
