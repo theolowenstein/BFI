@@ -8,7 +8,7 @@
 function bfi_project_review_rules_action_info() {
 	$actions = array(
 		'bfi_project_review_action_review_in' => array(
-			'label' => t('register Project Review submission, per reviewer, per round'),
+			'label' => t('Register Project Review submission, per reviewer, per round'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
 				'project' => array(			// Name of the parameter to be supplied via Rules UI
@@ -20,7 +20,7 @@ function bfi_project_review_rules_action_info() {
 		),
 
 		'bfi_project_review_action_fetch_project' => array(
-			'label' => t('fetch current project via relation from entityform'),
+			'label' => t('Fetch current project via relation from entityform'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
 				'review_current' => array(			// Name of the parameter to be supplied via Rules UI
@@ -33,6 +33,23 @@ function bfi_project_review_rules_action_info() {
 				'project_current' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'node',		// Specifying type of entity to be passed
 					'label' => t('Current Project'),
+				),
+			),
+		),
+
+		'bfi_project_review_action_add_fc_rev_id' => array(
+			'label' => t('Add Revision ID to transferred Field Collection on Entityform Submission'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'entityform' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'entityform',		// Specifying type of entity to be passed
+					'label' => t('Origin Entityform'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'node' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Recipient Node'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
 				),
 			),
 		),
@@ -163,6 +180,13 @@ function bfi_project_review_action_review_in($project) {
 		
 	}
 
+}
+
+function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
+	$entityform_wrapper = entity_metadata_wrapper('entityform', $entityform->entityform_id);
+	if (isset($entityform_wrapper->field_application_questions)) {
+		dpm($entityform_wrapper->field_application_questions->revision_id->value());
+	}
 }
 
 function bfi_project_review_action_fetch_project($review_current) {

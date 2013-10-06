@@ -1,8 +1,0 @@
-filename = "TheBuckminsterFullerChallenge-2013-10-05T18-19-30"
-description = ""
-datestamp = "1381011572"
-generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
-generatorversion = "7.x-2.x"
-sites[0][version] = "7.22"
-sites[0][name] = "The Buckminster Fuller Challenge"
-sites[0][url] = "http://challenge.dev.bfi.local/"
