@@ -118,9 +118,9 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 
 	// Tallying up criteria scores
 	$scores_cum = array();
-	foreach ($wraps as $key => $eval) {
-		foreach ($eval as $field => $value) {
-			if(substr($field, 0, 26) == 'field_project_review_score') {
+	foreach ($wraps as $key => $eval) {					// Loop through evaluations
+		foreach ($eval as $field => $value) {			// Loop through fields
+			if(substr($field, 0, 26) == 'field_project_review_score') {			// Save score values to cumulative array
 				$bitlet = substr($field, 27);
 				if (isset($scores_cum[$bitlet])) $scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
 				else $scores_cum[$bitlet] = 0;
@@ -139,14 +139,14 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	}
 	$score_coll_wrapper = entity_metadata_wrapper('field_collection_item', reset($score_coll));
 	$score_coll_wrapper->field_project_round_eval->set($round);
-	foreach ($score_coll_wrapper as $field => $value) {
-		if (substr($field, 0, 24) == 'field_project_review_ave') {
+	foreach ($score_coll_wrapper as $field => $value) {		// Loop through fields
+		if (substr($field, 0, 24) == 'field_project_review_ave') {			// Save average values
 			bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count);
 		}
 	}
+	dpm($project->field_project_reviewers);
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
 }
-
 
 /*
  * Setting Review Round submissions register per user, per round. The vars then determine if the review note form is visible later.
