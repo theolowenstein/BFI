@@ -89,8 +89,7 @@ function bfi_project_review_tally_criteria(&$field) {
 
 function bfi_project_review_set_averages(&$field, $cumulative, $count) {
 	$average = $cumulative/(10*$count);
-	$field->set($average);
-	return $average;	
+	$field->set($average);	
 }
 
 function bfi_project_review_average_criteria_scores(&$project, $round) {
@@ -128,7 +127,6 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 			}
 		}
 	}
-	dpm($scores_cum);
 
 	// If Average for round ($round - 1) already exists, update it
 	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node and https://drupal.org/node/1106182
@@ -143,7 +141,7 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	$score_coll_wrapper->field_project_round_eval->set($round);
 	foreach ($score_coll_wrapper as $field => $value) {
 		if (substr($field, 0, 24) == 'field_project_review_ave') {
-			dpm('Ave '.substr($field, 25).' = '.bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count));
+			bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count);
 		}
 	}
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
