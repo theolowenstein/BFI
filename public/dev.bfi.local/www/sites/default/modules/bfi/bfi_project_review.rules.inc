@@ -144,7 +144,6 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 			bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count);
 		}
 	}
-	dpm($project->field_project_reviewers);
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
 }
 
