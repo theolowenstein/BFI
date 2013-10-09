@@ -122,8 +122,11 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 		foreach ($eval as $field => $value) {			// Loop through fields
 			if(substr($field, 0, 26) == 'field_project_review_score') {			// Save score values to cumulative array
 				$bitlet = substr($field, 27);
-				if (isset($scores_cum[$bitlet])) $scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
-				else $scores_cum[$bitlet] = 0;
+				if (isset($scores_cum[$bitlet])) {
+					$scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
+				} else {
+					$scores_cum[$bitlet] = bfi_project_review_tally_criteria($value);
+				}
 			}
 		}
 	}
