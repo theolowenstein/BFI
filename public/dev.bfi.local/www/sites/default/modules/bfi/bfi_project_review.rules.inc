@@ -167,22 +167,18 @@ function bfi_project_review_action_review_in($project) {
 			case 1:
 				$user_rel_wrapper->field_project_review_r1_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 2:
 				$user_rel_wrapper->field_project_review_r2_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 3;
 				$user_rel_wrapper->field_project_review_r3_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 		}
-		
+		bfi_project_review_average_criteria_scores($project, $curr_round);
 	}
-
 }
 
 function bfi_project_review_action_copy_field_coll_to_node($source, $node, $field) {
