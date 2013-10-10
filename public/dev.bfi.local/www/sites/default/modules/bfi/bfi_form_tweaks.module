@@ -41,7 +41,8 @@ $path = drupal_get_path('module', $mod_name).'/css/'.$mod_name.'.css';
 $inline = '
 form div.field-name-field-project-review-r1-in,
 form div.field-name-field-project-review-r2-in,
-form div.field-name-field-project-review-r3-in {
+form div.field-name-field-project-review-r3-in,
+form div.field-name-field-project-review-score-rds {
   display: none !important;
 }
 
