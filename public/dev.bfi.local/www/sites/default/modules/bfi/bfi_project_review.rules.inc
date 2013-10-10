@@ -196,7 +196,7 @@ function bfi_project_review_action_copy_field_coll_to_node($source, $node, $fiel
 		$field_coll_node->setHostEntity('node', $node);
 
 		foreach ($field_coll_form[$field_to_get_id] as $key => $value) {
-			if (substr($key, 0, 6) == 'field_') {
+			if (substr($key, 0, 6) == 'field_') {			// Check to see if field is custom field, to be copied over
 				$field_coll_node->$key = $value;
 			}
 		}
