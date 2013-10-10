@@ -1,0 +1,11 @@
+FOR TRIMTAB ITEMS:
+- On creating/editing item: make sure if adding newly to section, create reference from trim tab issue in correct node reference field, based on taxonomy term selected
+- On adding item within trim tab issue form: if/when switching sections, make sure in rules to switch over item's taxonomy terms, too…
+
+
+FOR BF CHALLENGE REVIEW PROCESS:
+- make vbo way to bulk add reviewers to projects
+- reset relations for review on assignation
+
+- Trigger criteria averages on Project Round changes
+- tweak reviewing users block - put in icons for note in, not, etc.
