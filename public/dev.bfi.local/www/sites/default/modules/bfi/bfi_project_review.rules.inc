@@ -322,7 +322,6 @@ function bfi_project_review_action_attach_project_to_user($project) {
     		'init' => 'email address',
     		'roles' => array(
       			DRUPAL_AUTHENTICATED_RID => 'authenticated user',
-      			12 => 'bfc applicant',
     		),
   		);
   		$new_user = user_save('', $new_user_fields);
