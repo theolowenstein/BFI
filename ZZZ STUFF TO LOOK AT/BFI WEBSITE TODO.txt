@@ -4,8 +4,10 @@ FOR TRIMTAB ITEMS:
 
 
 FOR BF CHALLENGE REVIEW PROCESS:
-- make vbo way to bulk add reviewers to projects
-- reset relations for review on assignation
+- make review dashboards for reviewers and bcc admin
+- make vbo way to bulk add reviewers to projects in dashboards
+- tweak access permissions, etc.
+- make function for assigning accepted applicant new (or pre-existing) user account
 
-- Trigger criteria averages on Project Round changes
-- tweak reviewing users block - put in icons for note in, not, etc.
+OVERALL
+- get location zip codes installed
