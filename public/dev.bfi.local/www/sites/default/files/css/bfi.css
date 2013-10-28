@@ -53,17 +53,25 @@
  * -----  Footer  -----
  */
 /*
- * -----------------------------------------------
- * Front Page
- * -----------------------------------------------
+ * -----  Excludes  -----
  */
-/*
- * -----------------------------------------------
- * Inner Pages
- * -----------------------------------------------
- */
-/*
- * -----------------------------------------------
- * Forms
- * -----------------------------------------------
- */
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'54';}}
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'55';}}
+div.view-bfi-trimtab-item-order div.tabledrag-changed-warning, div.view-bfi-trimtab-item-order div.tabledrag-toggle-weight-wrapper {
+  display: none !important;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'59';}}
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'60';}}
+div.view-bfi-trimtab-item-order div.field-newsletter-item-section ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'65';}}
+@media -sass-debug-info{filename{font-family:file\:\/\/sites\/all\/themes\/bfi\/styles\/bfi\.scss;}line{font-family:'66';}}
+div.view-bfi-trimtab-item-order div.field-newsletter-item-section ul div.field-name-field-newsletter-item-section label {
+  display: none;
+}
+
+

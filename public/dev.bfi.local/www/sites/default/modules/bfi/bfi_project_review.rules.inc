@@ -37,11 +37,29 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
-		'bfi_project_review_action_add_fc_rev_id' => array(
-			'label' => t('Add Revision ID to transferred Field Collection on Entityform Submission'),
+		'bfi_project_review_action_ensure_unique_project' => array(
+			'label' => t("Ensure that submitted project is unique by current year's emails"),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
-				'entityform' => array(			// Name of the parameter to be supplied via Rules UI
+				'app' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'entityform',		// Specifying type of entity to be passed
+					'label' => t('Project Application'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+			'provides' => array(
+				'nonu_projects' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'integer',		// Specifying type of entity to be passed
+					'label' => t('Non-unique Projects'),
+				),
+			),
+		),
+
+		'bfi_project_review_action_copy_field_coll_to_node' => array(
+			'label' => t('Copy Field Collection from Entityform to Node'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'source' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'entityform',		// Specifying type of entity to be passed
 					'label' => t('Origin Entityform'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
@@ -49,6 +67,53 @@ function bfi_project_review_rules_action_info() {
 				'node' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'node',		// Specifying type of entity to be passed
 					'label' => t('Recipient Node'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'field' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'field_collection_item',		// Specifying type of entity to be passed
+					'label' => t('Desired Collection'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
+		'bfi_project_review_action_attach_project_to_user' => array(
+			'label' => t("Logic for attaching Project to existing User or create new"),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'project' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Project'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+			'provides' => array(
+				'user_rid' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'integer',		// Specifying type of entity to be passed
+					'label' => t('User to attach to'),
+				),
+			),
+		),
+
+		'bfi_project_review_action_assign_reviewer_if_not' => array(
+			'label' => t('Assign project to review if not already assigned'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'reviewer' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'user',		// Specifying type of entity to be passed
+					'label' => t('Reviewer'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
+		'bfi_project_review_action_take_out_reviewer' => array(
+			'label' => t('Take out reviewer if assigned to project'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'reviewer' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'user',		// Specifying type of entity to be passed
+					'label' => t('Reviewer'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
 				),
 			),
@@ -84,8 +149,7 @@ function bfi_project_review_tally_criteria(&$field) {
 
 function bfi_project_review_set_averages(&$field, $cumulative, $count) {
 	$average = $cumulative/(10*$count);
-	$field->set($average);
-	return $average;	
+	$field->set($average);	
 }
 
 function bfi_project_review_average_criteria_scores(&$project, $round) {
@@ -113,17 +177,19 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	$wrap_count = count($wraps);
 
 	// Tallying up criteria scores
-	$cum_vis = $cum_comp = $cum_antic = $cum_ecol = $cum_feas = $cum_verif = $cum_rep = 0;
-	foreach($wraps as $key => $value) {
-		$cum_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
-		$cum_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
-		$cum_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
-		$cum_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
-		$cum_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
-		$cum_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
-		$cum_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
+	$scores_cum = array();
+	foreach ($wraps as $key => $eval) {					// Loop through evaluations
+		foreach ($eval as $field => $value) {			// Loop through fields
+			if(substr($field, 0, 26) == 'field_project_review_score') {			// Save score values to cumulative array
+				$bitlet = substr($field, 27);
+				if (isset($scores_cum[$bitlet])) {
+					$scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
+				} else {
+					$scores_cum[$bitlet] = bfi_project_review_tally_criteria($value);
+				}
+			}
+		}
 	}
-
 
 	// If Average for round ($round - 1) already exists, update it
 	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node and https://drupal.org/node/1106182
@@ -136,16 +202,13 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	}
 	$score_coll_wrapper = entity_metadata_wrapper('field_collection_item', reset($score_coll));
 	$score_coll_wrapper->field_project_round_eval->set($round);
-	$ave_vis = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_vis, $cum_vis, $wrap_count);
-	$ave_comp = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_comp, $cum_comp, $wrap_count);
-	$ave_antic = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_antic, $cum_antic, $wrap_count);
-	$ave_ecol = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_ecol, $cum_ecol, $wrap_count);
-	$ave_feas = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_feas, $cum_feas, $wrap_count);
-	$ave_verif = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_verif, $cum_verif, $wrap_count);
-	$ave_rep = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_rep, $cum_rep, $wrap_count);
+	foreach ($score_coll_wrapper as $field => $value) {		// Loop through fields
+		if (substr($field, 0, 24) == 'field_project_review_ave') {			// Save average values
+			bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count);
+		}
+	}
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
 }
-
 
 /*
  * Setting Review Round submissions register per user, per round. The vars then determine if the review note form is visible later.
@@ -164,30 +227,66 @@ function bfi_project_review_action_review_in($project) {
 			case 1:
 				$user_rel_wrapper->field_project_review_r1_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 2:
 				$user_rel_wrapper->field_project_review_r2_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 			case 3;
 				$user_rel_wrapper->field_project_review_r3_in->set(1);
 				$user_rel_wrapper->save();
-				bfi_project_review_average_criteria_scores($project, $curr_round);
 				break;
 		}
-		
+		bfi_project_review_average_criteria_scores($project, $curr_round);
 	}
-
 }
 
-function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
-	$entityform_wrapper = entity_metadata_wrapper('entityform', $entityform->entityform_id);
-	if (isset($entityform_wrapper->field_application_questions)) {
-		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
-		node_save($node);
+function bfi_project_review_action_copy_field_coll_to_node($source, $node, $field) {
+	$field_to_get_name = $field->field_name;
+	if (isset($source->$field_to_get_name)) {
+		$field_to_get = $source->$field_to_get_name;
+		$field_to_get_id = $field_to_get[LANGUAGE_NONE][0]['value'];
+		$field_coll_form = entity_load('field_collection_item', array($field_to_get_id));
+
+		$field_coll_node = entity_create('field_collection_item', array('field_name' => $field_to_get_name));
+		$field_coll_node->setHostEntity('node', $node);
+
+		foreach ($field_coll_form[$field_to_get_id] as $key => $value) {
+			if (substr($key, 0, 6) == 'field_') {			// Check to see if field is custom field, to be copied over
+				$field_coll_node->$key = $value;
+			}
+		}
+		$field_coll_node->save();
 	}
+}
+
+function bfi_project_review_action_ensure_unique_project($app) {
+	$return = 0;
+	$app_qs = entity_load('field_collection_item', array($app
+		->field_application_questions[LANGUAGE_NONE][0]['value']));		// Load app and get email
+	foreach ($app_qs as $value) {
+		$app_email = $value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'];
+	}
+	$project_query = new EntityFieldQuery();		// Generate list of projects in current year
+	$project_query
+		->entityCondition('entity_type', 'node')
+		->fieldCondition('field_year', 'value', date('Y').'-01-01 00:00:00');  // Only works if Challenge cycle fits into whole year, and DateAPI doesn't change format.
+	$projects = $project_query->execute();
+	foreach ($projects as $list) {
+		foreach ($list as $project) {			// Loop through each submitted project
+			$curr_project = node_load($project->nid);
+			$field_coll = entity_load('field_collection_item', array($curr_project
+				->field_application_questions[LANGUAGE_NONE][0]['value']));
+			foreach ($field_coll as $value) {		// Check for email address
+				if ($value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'] == $app_email) {
+					$return++;
+				}
+			}
+		}
+	}
+	return array(
+		'nonu_projects' => $return,
+	);
 }
 
 function bfi_project_review_action_fetch_project($review_current) {
@@ -197,12 +296,90 @@ function bfi_project_review_action_fetch_project($review_current) {
 	);
 }
 
+function bfi_project_review_action_attach_project_to_user($project) {
+	$return = 0;
+	$app = entity_load('field_collection_item', array($project->field_application_questions[LANGUAGE_NONE][0]['value']));
+	foreach ($app as $value) {
+		$app_email = $value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'];
+		$app_name = strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['given']).'_'.strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['family']);
+		$app_pass = user_password(8);
+	}
+	$user_query = new EntityFieldQuery();
+	$user_query
+		->entityCondition('entity_type', 'user')
+		->propertyCondition('mail', $app_email);
+	$users = $user_query->execute();
+	if (isset($users['user'])) {			// If user w/ email exists, return UID of existing user
+		foreach ($users['user'] as $value) {
+			$return = intval($value->uid);
+		}
+	} else {								// Else make new user
+		$new_user_fields = array(
+    		'name' => $app_name,
+    		'mail' => $app_email,
+    		'pass' => $app_pass,
+    		'status' => 1,
+    		'init' => 'email address',
+    		'roles' => array(
+      			DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+    		),
+  		);
+  		$new_user = user_save('', $new_user_fields);
+  		$return = intval($new_user->uid);
+	}
+	return array(
+		'user_rid' => $return,
+	);
+}
+
+function bfi_project_review_action_assign_reviewer_if_not($reviewer) {
+	$project = menu_get_object();
+	$rids = relation_query('user', $reviewer->uid)
+		->related('node', $project->nid)
+		->execute();
+	$rels = entity_load('relation', array_keys($rids));
+	if (!count($rels)) {				// Only do below if no review rels exist yet
+		$endpoints = array(				// Adding review relation
+			array('entity_type' => 'user', 'entity_id' => $reviewer->uid),
+			array('entity_type' => 'node', 'entity_id' => $project->nid),
+		);
+		$rid = relation_insert('bfc_reviewer_assignment', $endpoints);
+		drupal_set_message('<i>'.$reviewer->name.'</i> has been assigned to <i>'.$project->title.'</i>.');
+	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> has already been assigned to <i>'.$project->title.'</i>.', 'error');
+}
+
+function bfi_project_review_action_take_out_reviewer($reviewer) {
+	$project = menu_get_object();
+	$rids = relation_query('user', $reviewer->uid)
+		->related('node', $project->nid)
+		->execute();
+	$rels = entity_load('relation', array_keys($rids));
+	if (count($rids)) {				// Only do below if review rel(s) exist already
+		$rel_wrapper = entity_metadata_wrapper('relation', reset($rels));
+		relation_delete($rel_wrapper->rid->value());
+		$review_query = new EntityFieldQuery();
+		$review_query
+			->entityCondition('entity_type', 'relation')
+			->propertyCondition('relation_type', 'bfc_evaluation');
+		$reviews_all = $review_query->execute();
+		foreach ($reviews_all['relation'] as $key => $value) {
+			$review_rel = entity_load('relation', array($value->rid));
+			foreach($review_rel as $key2 => $review) {
+				if (($reviewer->uid == $review->uid) && ($project->nid == $review->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
+					relation_delete($review->rid);
+				}
+			}
+		}
+		drupal_set_message('<i>'.$reviewer->name.'</i> has been removed from <i>'.$project->title.'</i>.');
+	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> is not assigned to <i>'.$project->title.'</i> yet.', 'error');
+
+}
+
 function bfi_project_review_action_dpm_project() {
 	$node = menu_get_object();
 	if ($node->type == 'project') {
 		dpm($node);
 	}
-
 }
 
 

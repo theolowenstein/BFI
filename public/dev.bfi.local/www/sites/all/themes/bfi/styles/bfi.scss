@@ -47,16 +47,24 @@
 
 /* -----  Footer  ----- */
 
+/* -----  Excludes  ----- */
 
-/*-----------------------------------------------
-                 Front Page
------------------------------------------------*/
+div.view-bfi-trimtab-item-order {
+	div.tabledrag-changed-warning, div.tabledrag-toggle-weight-wrapper {
+		display: none !important;
+	}
 
-/*-----------------------------------------------
-                 Inner Pages
------------------------------------------------*/
+	div.field-newsletter-item-section {
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
 
-/*-----------------------------------------------
-                   Forms
------------------------------------------------*/
-
+			div.field-name-field-newsletter-item-section {
+				label {
+					display: none;
+				}
+			}
+		}
+	}
+}

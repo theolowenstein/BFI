@@ -1,11 +1,16 @@
-FOR TRIMTAB ITEMS:
-- On creating/editing item: make sure if adding newly to section, create reference from trim tab issue in correct node reference field, based on taxonomy term selected
-- On adding item within trim tab issue form: if/when switching sections, make sure in rules to switch over item's taxonomy terms, too…
+FOR ARTICLES, ETC.
+- Make box with different tag types
+- Make social tag box
 
+FOR TRIMTAB:
+- make custom ui for adding relations
+- figure out how to export to html email
 
 FOR BF CHALLENGE REVIEW PROCESS:
-- make vbo way to bulk add reviewers to projects
-- reset relations for review on assignation
+- make review dashboards for reviewers and bcc admin
+- make vbo way to bulk add reviewers to projects in dashboards
+- tweak access permissions, etc.
+- make function for assigning accepted applicant new (or pre-existing) user account
 
-- Trigger criteria averages on Project Round changes
-- tweak reviewing users block - put in icons for note in, not, etc.
+OVERALL
+- get location zip codes installed
