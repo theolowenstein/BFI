@@ -37,6 +37,24 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
+		'bfi_project_review_action_ensure_unique_project' => array(
+			'label' => t("Ensure that submitted project is unique by current year's emails"),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'app' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'entityform',		// Specifying type of entity to be passed
+					'label' => t('Project Application'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+			'provides' => array(
+				'nonu_projects' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'integer',		// Specifying type of entity to be passed
+					'label' => t('Non-unique Projects'),
+				),
+			),
+		),
+
 		'bfi_project_review_action_copy_field_coll_to_node' => array(
 			'label' => t('Copy Field Collection from Entityform to Node'),
 			'group' => t('BFI Custom'),
@@ -55,6 +73,24 @@ function bfi_project_review_rules_action_info() {
 					'type' => 'field_collection_item',		// Specifying type of entity to be passed
 					'label' => t('Desired Collection'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
+		'bfi_project_review_action_attach_project_to_user' => array(
+			'label' => t("Logic for attaching Project to existing User or create new"),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'project' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Project'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+			'provides' => array(
+				'user_rid' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'integer',		// Specifying type of entity to be passed
+					'label' => t('User to attach to'),
 				),
 			),
 		),
@@ -224,10 +260,75 @@ function bfi_project_review_action_copy_field_coll_to_node($source, $node, $fiel
 	}
 }
 
+function bfi_project_review_action_ensure_unique_project($app) {
+	$return = 0;
+	$app_qs = entity_load('field_collection_item', array($app
+		->field_application_questions[LANGUAGE_NONE][0]['value']));		// Load app and get email
+	foreach ($app_qs as $value) {
+		$app_email = $value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'];
+	}
+	$project_query = new EntityFieldQuery();		// Generate list of projects in current year
+	$project_query
+		->entityCondition('entity_type', 'node')
+		->fieldCondition('field_year', 'value', date('Y').'-01-01 00:00:00');  // Only works if Challenge cycle fits into whole year, and DateAPI doesn't change format.
+	$projects = $project_query->execute();
+	foreach ($projects as $list) {
+		foreach ($list as $project) {			// Loop through each submitted project
+			$curr_project = node_load($project->nid);
+			$field_coll = entity_load('field_collection_item', array($curr_project
+				->field_application_questions[LANGUAGE_NONE][0]['value']));
+			foreach ($field_coll as $value) {		// Check for email address
+				if ($value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'] == $app_email) {
+					$return++;
+				}
+			}
+		}
+	}
+	return array(
+		'nonu_projects' => $return,
+	);
+}
+
 function bfi_project_review_action_fetch_project($review_current) {
 	$project_current = relation_get_related_entity('entityform', $review_current->entityform_id);
 	return array(
 		'project_current' => $project_current,
+	);
+}
+
+function bfi_project_review_action_attach_project_to_user($project) {
+	$return = 0;
+	$app = entity_load('field_collection_item', array($project->field_application_questions[LANGUAGE_NONE][0]['value']));
+	foreach ($app as $value) {
+		$app_email = $value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'];
+		$app_name = strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['given']).'_'.strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['family']);
+		$app_pass = user_password(8);
+	}
+	$user_query = new EntityFieldQuery();
+	$user_query
+		->entityCondition('entity_type', 'user')
+		->propertyCondition('mail', $app_email);
+	$users = $user_query->execute();
+	if (isset($users['user'])) {			// If user w/ email exists, return UID of existing user
+		foreach ($users['user'] as $value) {
+			$return = intval($value->uid);
+		}
+	} else {								// Else make new user
+		$new_user_fields = array(
+    		'name' => $app_name,
+    		'mail' => $app_email,
+    		'pass' => $app_pass,
+    		'status' => 1,
+    		'init' => 'email address',
+    		'roles' => array(
+      			DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+    		),
+  		);
+  		$new_user = user_save('', $new_user_fields);
+  		$return = intval($new_user->uid);
+	}
+	return array(
+		'user_rid' => $return,
 	);
 }
 
@@ -259,8 +360,7 @@ function bfi_project_review_action_take_out_reviewer($reviewer) {
 		$review_query = new EntityFieldQuery();
 		$review_query
 			->entityCondition('entity_type', 'relation')
-			->propertyCondition('relation_type', 'bfc_evaluation')
-			->execute();
+			->propertyCondition('relation_type', 'bfc_evaluation');
 		$reviews_all = $review_query->execute();
 		foreach ($reviews_all['relation'] as $key => $value) {
 			$review_rel = entity_load('relation', array($value->rid));
