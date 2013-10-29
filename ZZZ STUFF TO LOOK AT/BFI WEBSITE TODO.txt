@@ -14,3 +14,4 @@ FOR BF CHALLENGE REVIEW PROCESS:
 
 OVERALL
 - get location zip codes installed
+- get theo set up
